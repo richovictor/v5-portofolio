@@ -12,11 +12,24 @@
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card bg-dark text-white rounded-4 shadow-lg">
             <div class="card-body p-5 text-center">
-              <h2 class="fw-bold mb-3 text-uppercase">Login</h2>
-              <p class="text-white-50 mb-4">Masukkan alamat email dan password anda!</p>
 
-              <form action="{{route('login.submit')}}" method="POST">
+              <h2 class="fw-bold mb-3 text-uppercase">Login</h2>
+              <p class="text-white-50 mb-4">Masuk sebagai siswa!</p>
+
+              {{-- Alert jika berhasil verifikasi email --}}
+              @if (session('success'))
+              <div class="alert alert-success text-start">
+                {{ session('success') }}
+              </div>
+              @endif
+
+              {{-- Form login --}}
+              <form action="{{ route('login.submit') }}" method="POST">
                 @csrf
+                <div class="mb-3">
+                  <input type="nisn" name="nisn" class="form-control form-control-lg" id="typeNisnX" placeholder="NISN">
+                </div>
+
                 <div class="mb-3">
                   <input type="email" name="email" class="form-control form-control-lg" id="typeEmailX" placeholder="Email">
                 </div>
@@ -34,21 +47,28 @@
                   <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
                   <a href="#" class="text-white"><i class="fab fa-google fa-lg"></i></a>
                 </div>
+                
+                {{-- Error validasi --}}
+                @if ($errors->any())
+                <div class="alert alert-danger text-start mt-3">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
               </form>
 
               {{-- Tampilkan error validasi --}}
-              @if ($errors->any())
-              <div class="alert alert-danger">
-                <ul class="mb-0">
-                  @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-                  @endforeach
-                </ul>
+              @if ($errors->has('login'))
+              <div class="alert alert-danger text-start mt-3">
+                {{ $errors->first('login') }}
               </div>
               @endif
 
               <div class="mt-4">
-                <p class="mb-0">Belum memiliki akun? <a href="{{route('registration.process')}}" class="text-white-50 fw-bold">Daftar</a></p>
+                <p class="mb-0">Belum memiliki akun? <a href="/registrasi" class="text-white-50 fw-bold">Daftar</a></p>
               </div>
             </div>
           </div>

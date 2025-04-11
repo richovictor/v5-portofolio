@@ -20,6 +20,10 @@
                 <div class="mb-3">
                   <input type="text" name="name" class="form-control form-control-lg" id="typeName" placeholder="Nama Lengkap">
                 </div>
+
+                <div class="mb-3">
+                  <input type="nisn" name="nisn" class="form-control form-control-lg" id="typeNisn" placeholder="NISN">
+                </div>
   
                 <div class="mb-3">
                   <input type="email" name="email" class="form-control form-control-lg" id="typeEmail" placeholder="Email">
@@ -50,7 +54,7 @@
               @endif
 
               <div class="mt-4">
-                <p class="mb-0">Sudah memiliki akun? <a href="{{route('login.process')}}" class="text-white-50 fw-bold">Login</a></p>
+                <p class="mb-0">Sudah memiliki akun? <a href="/login" class="text-white-50 fw-bold">Login</a></p>
               </div>
             </div>
           </div>
