@@ -30,16 +30,21 @@
                 </div>
   
                 <div class="mb-3">
-                  <input type="password" name="password" class="form-control form-control-lg" id="typePassword" placeholder="Password">
+                  <div class="input-group">
+                    <input type="password" name="password" class="form-control form-control-lg" id="typePasswordX" placeholder="Password">
+                    <button type="button" class="btn btn-outline-light" id="togglePassword">
+                      <i class="fas fa-eye" id="iconPassword"></i>
+                    </button>
+                  </div>
                 </div>
   
                 <button class="btn btn-outline-light btn-lg w-100" type="submit">Daftar</button>
   
-                <div class="d-flex justify-content-center text-center mt-4">
+                {{-- <div class="d-flex justify-content-center text-center mt-4">
                   <a href="#" class="text-white me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
                   <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
                   <a href="#" class="text-white"><i class="fab fa-google fa-lg"></i></a>
-                </div>
+                </div> --}}
               </form>
 
               {{-- Tampilkan error validasi --}}
@@ -62,4 +67,22 @@
       </div>
     </div>
 </section>
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('typePasswordX');
+    const icon = document.getElementById('iconPassword');
+
+    togglePassword.addEventListener('click', function () {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      icon.classList.toggle('fa-eye');
+      icon.classList.toggle('fa-eye-slash');
+    });
+  });
+</script>
+@endpush
+
 @endsection

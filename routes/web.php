@@ -5,6 +5,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiswaController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request; 
+use App\Http\Controllers\ForgotPasswordController;
+use Illuminate\Support\Facades\Password;
+
 
 //route user
 Route::get('/', [HomeController::class, 'index']);
@@ -28,7 +32,6 @@ Route::middleware('auth')->group(function (){
         return redirect()->route('verification.success')->with('success', 'Email berhasil diverifikasi.');
     })->middleware(['auth', 'signed'])->name('verification.verify');
 
-    // 👉 Tambahkan route ini di dalam blok yang sama:
     Route::post('/email/verification-notification', function (Request $request) {
         $request->user()->sendEmailVerificationNotification();
 
@@ -40,13 +43,17 @@ Route::get('/email/verified-success', function () {
     return view('auth.verified-success');
 })->name('verification.success');
 
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+
 
 Route::get('/login', [AuthController::class, 'processLogin'])->name('login');
 Route::post('/login/submit', [AuthController::class, 'submitLogin'])->name('login.submit');
 
 Route::get('/registrasi', [AuthController::class, 'processRegistrasi'])->name('registration.process');
 Route::post('/registrasi/submit', [AuthController::class, 'submitRegistrasi'])->name('registration.submit');
-
 
 Route::get('/blog', function () {
     return view('blog');

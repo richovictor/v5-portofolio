@@ -36,5 +36,7 @@
     @include("layout.script")
     {{-- End Of script --}}
 
+    @stack('scripts')
+
 </body>
 </html>
