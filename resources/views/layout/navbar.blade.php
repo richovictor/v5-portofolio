@@ -9,7 +9,7 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="/dashboard" class="active">Beranda<br></a></li>
+          <li><a href="/dashboard" class="{{request()->is('dashboard')?'active' : ''}}">Beranda<br></a></li>
           <li><a href="#about">Tentang</a></li>
           {{-- <li><a href="#services">Layanan</a></li> --}}
           <li><a href="#portfolio">Portofolio</a></li>
@@ -59,14 +59,39 @@
                 <a href="#">Column 5 link 2</a>
                 <a href="#">Column 5 link 3</a>
               </li>
-            </ul> --}}  
+            </ul> --}} 
+            @auth
+            <li><a href="{{ route('laman.siswa') }}" class="{{ request()->is('siswa') ? 'active' : '' }}">Siswa</a></li>
+            @endauth
           </li>
           <li><a href="#contact">Kontak</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
 
-      <a class="btn-getstarted flex-md-shrink-0" href="/login">Masuk</a>
+      {{-- Jika belum login --}}
+@guest
+<a class="btn-getstarted flex-md-shrink-0" href="{{ route('login') }}">Masuk</a>
+@endguest
+
+{{-- Jika sudah login --}}
+@auth
+<div class="dropdown ms-3">
+  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="bi bi-person-circle fs-4"></i>
+  </a>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><a class="dropdown-item" href="{{ route('laman.siswa') }}">Profil Saya</a></li>
+    <li>
+      <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="dropdown-item">Keluar</button>
+      </form>
+    </li>
+  </ul>
+</div>
+@endauth
+
 
     </div>
   </header>

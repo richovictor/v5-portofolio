@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\ForgotPasswordController;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
 
 
 //route user
@@ -54,6 +55,11 @@ Route::post('/login/submit', [AuthController::class, 'submitLogin'])->name('logi
 
 Route::get('/registrasi', [AuthController::class, 'processRegistrasi'])->name('registration.process');
 Route::post('/registrasi/submit', [AuthController::class, 'submitRegistrasi'])->name('registration.submit');
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/dashboard'); 
+})->name('logout');
 
 Route::get('/blog', function () {
     return view('blog');
