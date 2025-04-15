@@ -10,9 +10,9 @@
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="/dashboard" class="{{request()->is('dashboard')?'active' : ''}}">Beranda<br></a></li>
-          <li><a href="#about">Tentang</a></li>
+          <li><a href="{{ url('/dashboard#about') }}">Tentang</a></li>
           {{-- <li><a href="#services">Layanan</a></li> --}}
-          <li><a href="#portfolio">Portofolio</a></li>
+          <li><a href="{{ url('/dashboard#portfolio') }}">Portofolio</a></li>
           {{-- <li><a href="#team">Tim</a></li> --}}
           {{-- <li><a href="/blog">Blog</a></li> --}}
           {{-- <li class="dropdown"><a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
@@ -64,34 +64,34 @@
             <li><a href="{{ route('laman.siswa') }}" class="{{ request()->is('siswa') ? 'active' : '' }}">Siswa</a></li>
             @endauth
           </li>
-          <li><a href="#contact">Kontak</a></li>
+          <li><a href="{{ url('/dashboard#contact') }}">Kontak</a></li>
+          @guest
+          <a href="{{ route('login') }}" class="btn btn-outline-white d-flex align-items-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
+          </a>
+          
+          @endguest 
+          @auth
+          <li class="dropdown">
+            <a href="#">
+              <img src="{{ Auth::user()->profile_photo_url ?? 'https://ui-avatars.com/api/?name='.urlencode(Auth::user()->name).'&background=0D8ABC&color=fff' }}"
+                alt="Profil" class="rounded-circle" width="28" height="28" style="object-fit: cover;">
+              <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
+            </a>
+            <ul>
+              <li><a href="{{ route('profil.siswa') }}">Profil Saya</a></li>
+              <li>
+                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                  @csrf
+                  <button type="submit" class="dropdown-item bg-transparent border-0 p-0 ps-2">Keluar</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+          @endauth
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
-
-      {{-- Jika belum login --}}
-@guest
-<a class="btn-getstarted flex-md-shrink-0" href="{{ route('login') }}">Masuk</a>
-@endguest
-
-{{-- Jika sudah login --}}
-@auth
-<div class="dropdown ms-3">
-  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="bi bi-person-circle fs-4"></i>
-  </a>
-  <ul class="dropdown-menu dropdown-menu-end">
-    <li><a class="dropdown-item" href="{{ route('laman.siswa') }}">Profil Saya</a></li>
-    <li>
-      <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit" class="dropdown-item">Keluar</button>
-      </form>
-    </li>
-  </ul>
-</div>
-@endauth
-
 
     </div>
   </header>

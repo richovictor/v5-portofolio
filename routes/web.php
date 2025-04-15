@@ -19,6 +19,8 @@ Route::get('/dashboard', function () {
 
 Route::middleware(['auth', 'verified', 'role:siswa'])->group(function () {
     Route::get('/siswa', [SiswaController::class, 'halamanSiswa'])->name('laman.siswa');
+    Route::get('/profil', [SiswaController::class, 'profil'])->name('profil.siswa');
+    Route::post('/profil/update', [SiswaController::class, 'updateProfil'])->name('profil.update');
 });
 
 // verif dlu baru login
