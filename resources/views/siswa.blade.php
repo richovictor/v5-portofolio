@@ -3,8 +3,8 @@
 @section('content')
 
 @if(session('success'))
-    <div class="container position-fixed top-0 start-0 end-0 mt-3 d-flex justify-content-center"
-         style="z-index: 1050;">
+    <div class="position-fixed top-3 start-50 translate-middle-x mt-3"
+         style="z-index: 1050; max-width: 480px;">
         <div class="alert alert-success alert-dismissible fade show shadow-sm w-auto text-center px-4 py-2"
              role="alert" id="flash-message">
             {{ session('success') }}
@@ -23,5 +23,18 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    setTimeout(() => {
+        const alert = document.getElementById('flash-message');
+        if (alert) {
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+        }
+    }, 3000);
+</script>
+@endpush
+
 
 @endsection

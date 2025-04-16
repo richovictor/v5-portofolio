@@ -38,28 +38,6 @@
     {{-- script --}}
     @include("layout.script")
     {{-- End Of script --}}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const loader = document.getElementById('loader-overlay');
-    
-            const allLinks = document.querySelectorAll('a');
-    
-            allLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    const href = link.getAttribute('href');
-    
-                    // Tampilkan loader jika link menuju ke halaman lain (bukan # atau javascript)
-                    if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !link.hasAttribute('target')) {
-                        loader.style.display = 'flex';
-                    }
-                });
-            });
-    
-            window.addEventListener('load', function () {
-                loader.style.display = 'none';
-            });
-        });
-    </script>
     
     <script>
         document.addEventListener("DOMContentLoaded", function() {
