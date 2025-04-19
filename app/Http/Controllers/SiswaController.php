@@ -9,7 +9,28 @@ class SiswaController extends Controller
 {
     public function halamanSiswa()
     {
-        return view('siswa');
+        $user = Auth::user();
+        $profil = $user->profil;
+
+        return view('siswa', compact('profil'));
+    }
+    
+    public function hapusCover()
+    {
+        $user = Auth::user();
+        $profil = $user->profil;
+
+        if ($profil && $profil->cover) {
+            $path = public_path($profil->cover);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            $profil->cover = null;
+            $profil->save();
+        }
+
+        return redirect()->route('laman.siswa')->with('success', 'Cover berhasil dihapus');
     }
 
     public function profil()
@@ -53,4 +74,24 @@ class SiswaController extends Controller
 
         return redirect()->route('laman.siswa')->with('success', 'Profil berhasil diperbarui');
     }
+    public function hapusFoto()
+    {
+        $user = Auth::user();
+        $profil = $user->profil;
+
+        if ($profil && $profil->foto) {
+            // Hapus file dari storage (opsional)
+            $path = public_path($profil->foto);
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            // Kosongkan kolom foto di database
+            $profil->foto = null;
+            $profil->save();
+        }
+
+        return redirect()->route('laman.siswa')->with('success', 'Foto profil berhasil dihapus');
+    }
+
 }

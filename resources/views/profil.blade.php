@@ -24,7 +24,7 @@
                             {{-- FOTO PROFIL --}}
                             <div class="col-md-4 text-center">
                                 <div class="position-relative">
-                                    <img src="{{ $user->profil?->foto ? asset($user->profil->foto) : 'https://via.placeholder.com/150' }}"
+                                    <img src="{{ $profil?->foto ? asset($profil->foto) : asset('storage/foto_profil.jpg') }}" alt="Foto Profil"
                                          class="rounded-circle img-thumbnail shadow-sm"
                                          alt="Foto Profil"
                                          style="width: 160px; height: 160px; object-fit: cover;">
@@ -77,6 +77,15 @@
                             </div>
                         </div> <!-- row -->
                     </form>
+                    @if($user->profil?->foto)
+                    <form action="{{ route('profil.hapusFoto') }}" method="POST" class="mt-2">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Hapus Foto
+                        </button>
+                    </form>
+                    @endif
                 </div>
             </div>
         </div>

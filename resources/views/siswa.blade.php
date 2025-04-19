@@ -12,14 +12,85 @@
     </div>
 @endif
 
-<div class="container py-5 mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow rounded-4">
-                <div class="card-header bg-light position-relative" style="height: 200px;">
-                    <h1>Ini halaman Siswa</h1>
+<div class="container mt-5 pt-5">
+    <div class="card shadow-sm">
+        {{-- Section 1: Cover & Profile --}}
+        <div class="position-relative bg-light" style="height: 170px; overflow: hidden">
+            {{-- Tampilkan gambar cover --}}
+            <img src="{{ $profil?->cover ? asset($profil->cover) : asset('storage/cover.jpg') }}"
+                 alt="Cover"
+                 class="position-absolute top-0 start-0"
+                 style="width: 100%; height:100%; object-fit:cover; pointer-events:none;">
+        
+            {{-- Tombol pensil (trigger file input) --}}
+            <button id="editCoverBtn" class="btn btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" style="z-index: 20;">
+                <i class="bi bi-pencil"></i>
+            </button>
+
+            @if ($profil?->cover)
+            <form action="{{ route('profil.hapusCover') }}" method="POST" class="position-absolute bottom-0 end-0 m-2" style="z-index: 20;">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn-danger btn-sm" type="submit">
+                    Hapus Cover
+                </button>
+            </form>
+            @endif
+            
+            {{-- Form upload tersembunyi --}}
+            <form id="coverForm" action="{{ route('profil.uploadCover') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                @csrf
+                <input type="file" name="cover" id="coverInput" accept="image/*">
+            </form>
+        </div>                
+
+        <div class="card-body pt-0">
+            <div class="row g-4 align-items-center">
+                <div class="col-12 col-md-auto text-center position-relative" style="margin-top: -60px; z-index: 10;">
+                    <img src="{{ $profil?->foto ? asset($profil->foto) : asset('storage/foto_profil.jpg') }}" alt="Foto Profil"
+                    class="rounded-circle border border-4 border-white shadow"
+                    style="width: 112px; height: 112px; object-fit: cover; position: relative; z-index: 10;">
                 </div>
+                <div class="col">
+                    <h4 class="fw-bold mb-0">{{Auth::user()->name}}</h4>
+                    <p class="mb-1 text-muted">Siswa di SMKN 5 Kota Malang</p>
+                    <p class="mb-2 text-secondary">Kota Malang, Jawa Timur, Indonesia • <a href="#" class="text-decoration-none">Informasi kontak</a></p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button>
+                        <a href="{{ route('profil.siswa') }}" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
+                        <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button>
+                        <button class="btn btn-outline-primary btn-sm">Sumber Informasi</button>
+                    </div>
+                </div>
+                <div class="col-auto d-none d-md-block">
+                    <div class="d-flex align-items-center">
+                        <img src="{{ asset('storage/logo_smk5.png') }}" alt="Logo SMK5"
+                             style="width: 60px; height: 60px; object-fit: contain; margin-right: 10px;">
+                        {{-- <p class="mb-0">SMKN 5 Kota Malang</p> kalo mo sejajar uncomment--}}
+                    </div>
+                </div>                               
             </div>
+        </div>
+
+        {{-- Section 2: Terbuka untuk bekerja --}}
+        <div class="card-body border-top">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="mb-1 text-muted small">Terbuka untuk bekerja</p>
+                    <p class="mb-1 fw-semibold">Peran Web Designer dan Pengembang Web</p>
+                    <a href="#" class="text-primary small text-decoration-none">Tampilkan detail</a>
+                </div>
+                <button class="btn btn-sm btn-light rounded-circle">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
+        </div>
+
+        {{-- Section Tambahan --}}
+        <div class="card-body border-top">
+            <h5 class="fw-bold mb-3">[Section Lainnya]</h5>
+            <p class="text-muted mb-0">Tempatkan konten lain di sini, seperti pengalaman kerja, pendidikan, sertifikat, dll.</p>
         </div>
     </div>
 </div>
@@ -33,8 +104,18 @@
             alert.classList.add('fade');
         }
     }, 3000);
+    
+    document.getElementById('editCoverBtn').addEventListener('click', function () {
+        document.getElementById('coverInput').click();
+    });
+
+    document.getElementById('coverInput').addEventListener('change', function () {
+        if (this.files.length > 0) {
+            document.getElementById('coverForm').submit();
+        }
+    });
+
 </script>
 @endpush
-
 
 @endsection

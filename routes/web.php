@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\CoverController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request; 
 use App\Http\Controllers\ForgotPasswordController;
@@ -57,6 +58,11 @@ Route::post('/login/submit', [AuthController::class, 'submitLogin'])->name('logi
 
 Route::get('/registrasi', [AuthController::class, 'processRegistrasi'])->name('registration.process');
 Route::post('/registrasi/submit', [AuthController::class, 'submitRegistrasi'])->name('registration.submit');
+
+Route::delete('/profil/hapus-foto', [SiswaController::class, 'hapusFoto'])->name('profil.hapusFoto');
+
+Route::post('/profil/upload-cover', [CoverController::class, 'uploadCover'])->name('profil.uploadCover');
+Route::delete('/profil/hapus-cover', [CoverController::class, 'hapusCover'])->name('profil.hapusCover');
 
 Route::post('/logout', function () {
     Auth::logout();
