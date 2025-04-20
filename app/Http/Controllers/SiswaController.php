@@ -12,7 +12,10 @@ class SiswaController extends Controller
         $user = Auth::user();
         $profil = $user->profil;
 
-        return view('siswa', compact('profil'));
+        return view('siswa', [
+            'profil' => $profil,
+            'email' => $user->email,
+            'telepon' => $profil?->telepon]);
     }
     
     public function hapusCover()
@@ -48,7 +51,7 @@ class SiswaController extends Controller
         $request->validate([
             'username' => 'nullable|string|max:255',
             'alamat' => 'nullable|string|max:255',
-            'no_telp' => 'nullable|string|max:15',
+            // 'no_telp' => 'nullable|string|max:15',
             'instagram' => 'nullable|string|max:255',
             'twitter' => 'nullable|string|max:255',
             'foto' => 'nullable|image|max:2048',
@@ -93,5 +96,17 @@ class SiswaController extends Controller
 
         return redirect()->route('laman.siswa')->with('success', 'Foto profil berhasil dihapus');
     }
+    public function updateKontak(Request $request)
+    {
+        $request->validate([
+            'no_telp' => 'required|string|max:15',
+        ]);
 
+        $user = Auth::user();
+        $profil = Profil::firstOrCreate(['user_id' => $user->id]);
+        $profil->no_telp = $request->no_telp;
+        $profil->save();
+
+        return redirect()->route('laman.siswa')->with('success', 'Informasi kontak berhasil diperbarui.');
+    }
 }

@@ -64,6 +64,9 @@ Route::delete('/profil/hapus-foto', [SiswaController::class, 'hapusFoto'])->name
 Route::post('/profil/upload-cover', [CoverController::class, 'uploadCover'])->name('profil.uploadCover');
 Route::delete('/profil/hapus-cover', [CoverController::class, 'hapusCover'])->name('profil.hapusCover');
 
+Route::put('/profil/kontak', [SiswaController::class, 'updateKontak'])->name('profil.updateKontak');
+
+
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/dashboard'); 

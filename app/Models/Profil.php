@@ -9,7 +9,7 @@ class Profil extends Model
     protected $fillable = [
         'user_id', 
         'username', 
-        'alamat', 
+        // 'alamat', 
         'no_telp', 
         'instagram', 
         'twitter', 

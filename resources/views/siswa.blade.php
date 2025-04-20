@@ -54,10 +54,47 @@
                 <div class="col">
                     <h4 class="fw-bold mb-0">{{Auth::user()->name}}</h4>
                     <p class="mb-1 text-muted">Siswa di SMKN 5 Kota Malang</p>
-                    <p class="mb-2 text-secondary">Kota Malang, Jawa Timur, Indonesia • <a href="#" class="text-decoration-none">Informasi kontak</a></p>
+                    <p class="mb-2 text-secondary">
+                        Kota Malang, Jawa Timur, Indonesia • 
+                        <a href="#" class="text-primary" data-bs-toggle="modal" data-bs-target="#kontakModal" style="cursor: pointer;">
+                          Informasi Kontak
+                        </a>
+                      </p>                      
 
+                    <!-- Modal Informasi Kontak -->
+                    <div class="modal fade" id="kontakModal" tabindex="-1" aria-labelledby="kontakModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <form action="{{ route('profil.updateKontak') }}" method="POST" class="w-100">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="kontakModalLabel">Edit Informasi Kontak</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body px-4 py-3">
+                                <div class="row mb-3">
+                                <div class="col-12 col-md-6">
+                                    <label for="email" class="form-label">Email (akun login)</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ $email }}" readonly>
+                                </div>
+                                <div class="col-12 col-md-6 mt-3 mt-md-0">
+                                    <label for="telepon" class="form-label">Nomor Telepon</label>
+                                    <input type="text" class="form-control" id="notelp" name="no_telp" value="{{ $profil -> no_telp ?? ''}}" placeholder="Masukkan nomor telepon aktif">
+                                </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between px-4 py-3">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-success">Simpan</button>
+                            </div>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+  
                     <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button>
+                        {{-- <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button> --}}
                         <a href="{{ route('profil.siswa') }}" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
                         <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button>
                         <button class="btn btn-outline-primary btn-sm">Sumber Informasi</button>

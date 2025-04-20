@@ -43,11 +43,11 @@
                                                value="{{ old('username', $user->profil->username ?? '') }}">
                                     </div>
 
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <label for="alamat" class="form-label fw-semibold">Alamat</label>
                                         <input type="text" name="alamat" id="alamat" class="form-control"
                                                value="{{ old('alamat', $user->profil->alamat ?? '') }}">
-                                    </div>
+                                    </div> --}}
 
                                     <div class="col-md-6">
                                         <label for="no_telp" class="form-label fw-semibold">No. Telepon</label>

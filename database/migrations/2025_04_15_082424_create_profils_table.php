@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
             $table->string('username')->nullable();
-            $table->string('alamat')->nullable();
+            // $table->string('alamat')->nullable();
             $table->string('no_telp')->nullable();
             $table->string('instagram')->nullable();
             $table->string('twitter')->nullable();
