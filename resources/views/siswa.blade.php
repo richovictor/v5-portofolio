@@ -108,7 +108,7 @@
                     <div class="d-flex flex-wrap gap-2">
                         {{-- <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button> --}}
                         <a href="{{ route('profil.siswa') }}" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
-                        <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button>
+                        {{-- <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button> --}}
                         <button class="btn btn-outline-primary btn-sm">Sumber Informasi</button>
                     </div>
                 </div>
@@ -122,20 +122,56 @@
             </div>
         </div>
 
-        {{-- Section 2: Terbuka untuk bekerja --}}
+        {{-- Section 2: Keahlian Anda --}}
         <div class="card-body border-top">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <p class="mb-1 text-muted small">Terbuka untuk bekerja</p>
-                    <p class="mb-1 fw-semibold">Peran Web Designer dan Pengembang Web</p>
+                    <p class="mb-1 text-muted small">Keahlian Anda</p>
+                    <p id="selected-keahlian" class="mb-1 fw-semibold text-muted">Pilih keahlian anda</p>
                     <a href="#" class="text-primary small text-decoration-none">Tampilkan detail</a>
                 </div>
-                <button class="btn btn-sm btn-light rounded-circle">
+                <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#modalKeahlian">
                     <i class="bi bi-pencil"></i>
                 </button>
             </div>
         </div>
 
+        <!-- Modal Keahlian -->
+        <div class="modal fade" id="modalKeahlian" tabindex="-1" aria-labelledby="modalKeahlianLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="formKeahlian">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalKeahlianLabel">Pilih Keahlian Anda</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="keahlian[]" value="Perakitan dan Pemeliharaan Komputer" id="keahlian1">
+                                <label class="form-check-label" for="keahlian1">Perakitan dan Pemeliharaan Komputer</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="keahlian[]" value="Jaringan Komputer" id="keahlian2">
+                                <label class="form-check-label" for="keahlian2">Jaringan Komputer</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="keahlian[]" value="Pengembang Web" id="keahlian3">
+                                <label class="form-check-label" for="keahlian3">Pengembang Web</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="keahlian[]" value="Desainer UI/UX" id="keahlian4">
+                                <label class="form-check-label" for="keahlian3">Desainer UI/UX</label>
+                            </div>
+                            <!-- Tambahkan keahlian lainnya sesuai kebutuhan -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+  
         {{-- Section Tambahan --}}
         <div class="card-body border-top">
             <h5 class="fw-bold mb-3">[Section Lainnya]</h5>
@@ -163,7 +199,26 @@
             document.getElementById('coverForm').submit();
         }
     });
+        document.getElementById('formKeahlian').addEventListener('submit', function(e) {
+        e.preventDefault();
 
+        let checkboxes = document.querySelectorAll('#formKeahlian input[type="checkbox"]:checked');
+        let selectedSkills = Array.from(checkboxes).map(cb => cb.value);
+
+        let keahlianText = document.getElementById('selected-keahlian');
+        if (selectedSkills.length > 0) {
+            keahlianText.textContent = selectedSkills.join(', ');
+            keahlianText.classList.remove('text-muted');
+        } else {
+            keahlianText.textContent = '-';
+            keahlianText.classList.add('text-muted');
+        }
+
+        // Tutup modal
+        let modalElement = document.getElementById('modalKeahlian');
+        let modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
+    });
 </script>
 @endpush
 
