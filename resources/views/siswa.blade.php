@@ -64,34 +64,46 @@
                     <!-- Modal Informasi Kontak -->
                     <div class="modal fade" id="kontakModal" tabindex="-1" aria-labelledby="kontakModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-lg">
-                        <form action="{{ route('profil.updateKontak') }}" method="POST" class="w-100">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-content">
-                            <div class="modal-header bg-primary text-white">
-                                <h5 class="modal-title" id="kontakModalLabel">Edit Informasi Kontak</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                            </div>
-                            <div class="modal-body px-4 py-3">
-                                <div class="row mb-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="email" class="form-label">Email (akun login)</label>
-                                    <input type="email" class="form-control" id="email" name="email" value="{{ $email }}" readonly>
+                            <form action="{{ route('profil.updateKontak') }}" method="POST" class="w-100">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-content shadow-lg rounded-4 border-0">
+                                    <!-- Header -->
+                                    <div class="modal-header bg-gradient bg-primary text-white rounded-top-4">
+                                        <h5 class="modal-title fw-semibold" id="kontakModalLabel">
+                                            <i class="bi bi-person-lines-fill me-2"></i> Edit Informasi Kontak
+                                        </h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                    </div>
+
+                                    <!-- Body -->
+                                    <div class="modal-body px-5 py-4">
+                                        <div class="row g-4">
+                                            <div class="col-12 col-md-6">
+                                                <label for="email" class="form-label fw-medium">Email Anda</label>
+                                                <input type="email" class="form-control shadow-sm" id="email" name="email" value="{{ $email }}" readonly>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <label for="notelp" class="form-label fw-medium">Nomor Telepon</label>
+                                                <input type="text" class="form-control shadow-sm" id="notelp" name="no_telp" value="{{ $profil->no_telp ?? '' }}" placeholder="Masukkan nomor telepon aktif">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Footer -->
+                                    <div class="modal-footer px-5 py-3 bg-light rounded-bottom-4">
+                                        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                                            <i class="bi bi-x-circle me-1"></i> Batal
+                                        </button>
+                                        <button type="submit" class="btn btn-success px-4">
+                                            <i class="bi bi-save me-1"></i> Simpan
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-12 col-md-6 mt-3 mt-md-0">
-                                    <label for="telepon" class="form-label">Nomor Telepon</label>
-                                    <input type="text" class="form-control" id="notelp" name="no_telp" value="{{ $profil -> no_telp ?? ''}}" placeholder="Masukkan nomor telepon aktif">
-                                </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer justify-content-between px-4 py-3">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-success">Simpan</button>
-                            </div>
-                            </div>
-                        </form>
+                            </form>
                         </div>
                     </div>
+
   
                     <div class="d-flex flex-wrap gap-2">
                         {{-- <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button> --}}

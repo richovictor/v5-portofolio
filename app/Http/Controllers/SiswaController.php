@@ -50,8 +50,8 @@ class SiswaController extends Controller
 
         $request->validate([
             'username' => 'nullable|string|max:255',
-            'alamat' => 'nullable|string|max:255',
-            // 'no_telp' => 'nullable|string|max:15',
+            // 'alamat' => 'nullable|string|max:255',
+            'no_telp' => 'nullable|string|max:15',
             'instagram' => 'nullable|string|max:255',
             'twitter' => 'nullable|string|max:255',
             'foto' => 'nullable|image|max:2048',
@@ -69,7 +69,7 @@ class SiswaController extends Controller
         }
 
         $profil->username = $request->username;
-        $profil->alamat = $request->alamat;
+        // $profil->alamat = $request->alamat;
         $profil->no_telp = $request->no_telp;
         $profil->instagram = $request->instagram;
         $profil->twitter = $request->twitter;
