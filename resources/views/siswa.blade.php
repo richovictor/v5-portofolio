@@ -337,7 +337,7 @@
                     <!-- SUmber Informasi -->
                     <div class="d-flex flex-wrap gap-2">
                         {{-- <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button> --}}
-                        <a href="{{ route('profil.siswa') }}" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
+                        <a href="" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
                         <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button>
                         <a href="{{ route('cv.generate') }}">
                             <button  class="btn btn-outline-primary btn-sm">Convert ke PDF</button>
