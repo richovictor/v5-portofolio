@@ -11,7 +11,7 @@
             <h1 data-aos="fade-up">Portofolio Vohi5ma</h1>
             <p data-aos="fade-up" data-aos-delay="100">Wadah untuk setiap siswa menunjukkan identitas, karya, dan keahliannya</p>
             <div class="d-flex flex-column flex-md-row" data-aos="fade-up" data-aos-delay="200">
-              <a href="{{route('laman.siswa')}}" class="btn-get-started">Masuk <i class="bi bi-arrow-right"></i></a>
+              <a href="{{route('login')}}" class="btn-get-started">Masuk <i class="bi bi-arrow-right"></i></a>
               <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center justify-content-center ms-0 ms-md-4 mt-4 mt-md-0"><i class="bi bi-play-circle"></i><span>Watch Video</span></a>
             </div>
           </div>
@@ -107,101 +107,54 @@
       </div><!-- End Section Title -->
 
       <div class="container">
-
         <div class="row gy-5">
+            @foreach ($users as $user)
+                <div class="col-xl-4 col-md-6 mb-4">
+                    <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
 
-          <div class="col-xl-4 col-md-6">
-            <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
+                        <div class="post-img position-relative overflow-hidden">
+                            <img src="{{ $user->profile->profile_image ?? asset('uploads/foto_profile/foto_profile.png') }}" class="img-fluid" alt="">
+                            <span class="post-date">{{$user->name}}</span>
+                        </div>
 
-              <div class="post-img position-relative overflow-hidden">
-                <img src="/img/blog/blog-1.jpg" class="img-fluid" alt="">
-                <span class="post-date">December 12</span>
-              </div>
+                        <div class="post-content d-flex flex-column">
 
-              <div class="post-content d-flex flex-column">
+                        <h3 class="post-title">{{$user->profile->username ?? '...'}}</h3>
 
-                <h3 class="post-title">Eum ad dolor et. Autem aut fugiat debitis</h3>
+                        <div class="meta d-flex align-items-center">
+                            <div class="d-flex align-items-center">
+                            @php
+                                $skills = explode(',', $user->selectedSkills->skills ?? '');
+                                // dd($skills);
+                            @endphp
+                            @if (!empty($user->selectedSkills) && !empty($user->selectedSkills->skills))
+                            <i class="bi bi-person"></i>
+                                @foreach ($skills as $skill)
+                                    {{-- <span class="badge bg-primary text-light me-1 mb-1">{{ trim($skill) }}</span> --}}
+                                        <span class="ps-2">{{ trim($skill) }}</span>
+                                @endforeach
+                            @else
+                                <span class="text-muted small">Belum ada skill yang ditambahkan</span>
+                            @endif
+                            </div>
+                            <span class="px-3 text-black-50">/</span>
 
-                <div class="meta d-flex align-items-center">
-                  <div class="d-flex align-items-center">
-                    <i class="bi bi-person"></i> <span class="ps-2">Julia Parker</span>
-                  </div>
-                  <span class="px-3 text-black-50">/</span>
-                  <div class="d-flex align-items-center">
-                    <i class="bi bi-folder2"></i> <span class="ps-2">Politics</span>
-                  </div>
-                </div>
+                        </div>
 
-                <hr>
+                        <hr>
+                        <a href="{{route('profile.view',['id'=>$user->id])}}" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
 
-                <a href="blog-details.html" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+                        </div>
 
-              </div>
+                    </div>
+                </div><!-- End post item -->
+            @endforeach
 
-            </div>
-          </div><!-- End post item -->
-
-          <div class="col-xl-4 col-md-6">
-            <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="200">
-
-              <div class="post-img position-relative overflow-hidden">
-                <img src="/img/blog/blog-2.jpg" class="img-fluid" alt="">
-                <span class="post-date">July 17</span>
-              </div>
-
-              <div class="post-content d-flex flex-column">
-
-                <h3 class="post-title">Et repellendus molestiae qui est sed omnis</h3>
-
-                <div class="meta d-flex align-items-center">
-                  <div class="d-flex align-items-center">
-                    <i class="bi bi-person"></i> <span class="ps-2">Mario Douglas</span>
-                  </div>
-                  <span class="px-3 text-black-50">/</span>
-                  <div class="d-flex align-items-center">
-                    <i class="bi bi-folder2"></i> <span class="ps-2">Sports</span>
-                  </div>
-                </div>
-
-                <hr>
-
-                <a href="blog-details.html" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-
-              </div>
-
-            </div>
-          </div><!-- End post item -->
-
-          <div class="col-xl-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="post-item position-relative h-100">
-
-              <div class="post-img position-relative overflow-hidden">
-                <img src="/img/blog/blog-3.jpg" class="img-fluid" alt="">
-                <span class="post-date">September 05</span>
-              </div>
-
-              <div class="post-content d-flex flex-column">
-
-                <h3 class="post-title">Quia assumenda est et veritati tirana ploder</h3>
-
-                <div class="meta d-flex align-items-center">
-                  <div class="d-flex align-items-center">
-                    <i class="bi bi-person"></i> <span class="ps-2">Lisa Hunter</span>
-                  </div>
-                  <span class="px-3 text-black-50">/</span>
-                  <div class="d-flex align-items-center">
-                    <i class="bi bi-folder2"></i> <span class="ps-2">Economics</span>
-                  </div>
-                </div>
-
-                <hr>
-
-                <a href="blog-details.html" class="readmore stretched-link"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-
-              </div>
-
-            </div>
-          </div><!-- End post item -->
+        </div>
+        <div class="text-center">
+            <a href="{{route('allstudent.seeall')}}">
+                <button class="btn btn-primary">See All</button>
+            </a>
 
         </div>
 
@@ -220,75 +173,67 @@
       </div><!-- End Section Title -->
 
       <div class="container">
-
         <div class="row">
-
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
-
             <div class="faq-container">
 
               <div class="faq-item faq-active">
-                <h3>Non consectetur a erat nam at lectus urna duis?</h3>
+                <h3>Apa itu fitur portofolio seperti LinkedIn di website ini?</h3>
                 <div class="faq-content">
-                  <p>Feugiat pretium nibh ipsum consequat. Tempus iaculis urna id volutpat lacus laoreet non curabitur gravida. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus non.</p>
+                  <p>Fitur ini memungkinkan pengguna membuat profil profesional lengkap dengan informasi seperti pengalaman kerja, pendidikan, sertifikat, dan keterampilan—mirip dengan LinkedIn—langsung di dalam platform ini.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
+              </div>
 
               <div class="faq-item">
-                <h3>Feugiat scelerisque varius morbi enim nunc faucibus a pellentesque?</h3>
+                <h3>Bagaimana cara menambahkan pengalaman kerja ke portofolio saya?</h3>
                 <div class="faq-content">
-                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                  <p>Kamu bisa menambahkan pengalaman kerja melalui tombol “Tambah Pengalaman” pada halaman profil. Isikan posisi, nama instansi, tanggal mulai dan selesai, serta deskripsi pekerjaan.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
+              </div>
 
               <div class="faq-item">
-                <h3>Dolor sit amet consectetur adipiscing elit pellentesque?</h3>
+                <h3>Apakah saya bisa mengunggah sertifikat dan dokumen pendukung?</h3>
                 <div class="faq-content">
-                  <p>Eleifend mi in nulla posuere sollicitudin aliquam ultrices sagittis orci. Faucibus pulvinar elementum integer enim. Sem nulla pharetra diam sit amet nisl suscipit. Rutrum tellus pellentesque eu tincidunt. Lectus urna duis convallis convallis tellus. Urna molestie at elementum eu facilisis sed odio morbi quis</p>
+                  <p>Ya, kamu bisa mengunggah sertifikat yang sudah kamu dapatkan melalui fitur “Tambah Sertifikat”, dan juga menyisipkan gambar atau dokumen pendukung lainnya.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
+              </div>
 
             </div>
-
-          </div><!-- End Faq Column-->
+          </div>
 
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-
             <div class="faq-container">
 
               <div class="faq-item">
-                <h3>Ac odio tempor orci dapibus. Aliquam eleifend mi in nulla?</h3>
+                <h3>Apakah saya bisa memilih keterampilan yang saya kuasai?</h3>
                 <div class="faq-content">
-                  <p>Dolor sit amet consectetur adipiscing elit pellentesque habitant morbi. Id interdum velit laoreet id donec ultrices. Fringilla phasellus faucibus scelerisque eleifend donec pretium. Est pellentesque elit ullamcorper dignissim. Mauris ultrices eros in cursus turpis massa tincidunt dui.</p>
+                  <p>Tentu! Di bagian “Kemampuan”, kamu bisa mencentang keterampilan yang sesuai dengan keahlianmu. Data ini akan tampil di profil dan bisa dilihat oleh pengunjung lain.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
+              </div>
 
               <div class="faq-item">
-                <h3>Tempus quam pellentesque nec nam aliquam sem et tortor consequat?</h3>
+                <h3>Bagaimana saya bisa mengonversi portofolio saya menjadi CV dalam format PDF?</h3>
                 <div class="faq-content">
-                  <p>Molestie a iaculis at erat pellentesque adipiscing commodo. Dignissim suspendisse in est ante in. Nunc vel risus commodo viverra maecenas accumsan. Sit amet nisl suscipit adipiscing bibendum est. Purus gravida quis blandit turpis cursus in</p>
+                  <p>Kamu dapat menggunakan fitur “Unduh CV” yang akan mengonversi semua data portofolio menjadi file PDF yang rapi dan profesional, siap digunakan untuk melamar pekerjaan.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
+              </div>
 
               <div class="faq-item">
-                <h3>Perspiciatis quod quo quos nulla quo illum ullam?</h3>
+                <h3>Apakah portofolio saya dapat dilihat oleh publik?</h3>
                 <div class="faq-content">
-                  <p>Enim ea facilis quaerat voluptas quidem et dolorem. Quis et consequatur non sed in suscipit sequi. Distinctio ipsam dolore et.</p>
+                  <p>Iya dong</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
-              </div><!-- End Faq item-->
+              </div>
 
             </div>
-
-          </div><!-- End Faq Column-->
-
+          </div>
         </div>
-
       </div>
 
     </section><!-- /Faq Section -->
@@ -364,11 +309,11 @@
         <p>Contact Us</p>
       </div><!-- End Section Title -->
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="container text-center d-flex justify-content-center" data-aos="fade-up" data-aos-delay="100">
 
         <div class="row gy-4">
 
-          <div class="col-lg-6">
+          {{-- <div class="col-lg-6">
 
             <div class="row gy-4">
               <div class="col-md-6">
@@ -409,10 +354,12 @@
 
             </div>
 
-          </div>
+          </div> --}}
 
-          <div class="col-lg-6">
-            <form action="/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+          <div class="col-lg-12 ">
+            <form action="{{route('email.submit')}}" method="post" >
+                @csrf
+                @method('POST')
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -432,11 +379,11 @@
                 </div>
 
                 <div class="col-12 text-center">
-                  <div class="loading">Loading</div>
+                  {{-- <div class="loading">Loading</div>
                   <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                  <div class="sent-message">Your message has been sent. Thank you!</div> --}}
 
-                  <button type="submit">Send Message</button>
+                  <button class="btn btn-primary" type="submit">Send Message</button>
                 </div>
 
               </div>

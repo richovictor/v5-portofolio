@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Certificates;
 use App\Models\Experiences;
 use App\Models\Activities;
+use App\Models\User;
 class SiswaController extends Controller
 {
 
@@ -34,6 +35,26 @@ class SiswaController extends Controller
         ));
     }
 
+    public function view($id)
+    {
+        $user = User::where('id', $id)->first();
+        $profil = $user->profile;
+        $selectedSkills = $user->selectedSkills;
+
+        // Ambil sertifikat, pengalaman, aktivitas berdasarkan user dan urutan terbaru
+        $certificates = Certificates::where('user_id', $user->id)->latest()->get();
+        $experiences = Experiences::where('user_id', $user->id)->latest()->get();
+        $activities = Activities::where('user_id', $user->id)->latest()->get();
+
+        return view('view-siswa', compact(
+            'user',
+            'profil',
+            'selectedSkills',
+            'certificates',
+            'experiences',
+            'activities'
+        ));
+    }
 
     public function create()
     {

@@ -9,7 +9,7 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="/dashboard" class="{{request()->is('dashboard')?'active' : ''}}">Beranda<br></a></li>
+          <li><a href="/" class="{{request()->is('dashboard')?'active' : ''}}">Beranda<br></a></li>
           <li><a href="{{ url('/dashboard#about') }}">Tentang</a></li>
           {{-- <li><a href="#services">Layanan</a></li> --}}
           <li><a href="{{ url('/dashboard#portfolio') }}">Portofolio</a></li>

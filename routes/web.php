@@ -12,9 +12,12 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\SelectedSkillsController;
 use App\Http\Controllers\CertificatesController;
 use App\Http\Controllers\ExperiencesController;
+use App\Http\Controllers\SubmiEmailController;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\CVController;
+use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\AdminUserController;
 
 //route user
 Route::get('/', [HomeController::class, 'index']);
@@ -48,7 +51,7 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkReques
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
-
+Route::post('/submitEmail', [SubmiEmailController::class, 'submit'])->name('email.submit');
 
 Route::get('/login', [AuthController::class, 'processLogin'])->name('login');
 Route::post('/login/submit', [AuthController::class, 'submitLogin'])->name('login.submit');
@@ -66,7 +69,7 @@ Route::put('/profil/kontak', [SiswaController::class, 'updateKontak'])->name('pr
 
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/dashboard');
+    return redirect('/');
 })->name('logout');
 
 Route::get('/blog', function () {
@@ -78,11 +81,14 @@ Route::get('/blog', function () {
 //     Route::get('/profil', [SiswaController::class, 'profil'])->name('profil.siswa');
 //     Route::post('/profil/update', [SiswaController::class, 'updateProfil'])->name('profil.update');
 // });
-
+Route::get('/all-student', [HomeController::class, 'seeall'])->name('allstudent.seeall');
+Route::get('/view/{id}/', [SiswaController::class, 'view'])->name('profile.view');
 Route::group(['middleware' => ['role:siswa|guru|superadmin','verified','auth']], function(){
+    Route::get('/cetak-cv', [CVController::class, 'generatePDF'])->name('cv.generate');
+
     Route::group(['prefix' => 'profile', 'as' => 'profile.','namespace'=> 'profile.'], function () {
         Route::get('/siswa', [SiswaController::class, 'index'])->name('index');
-        Route::get('/view/{id}/', [SiswaController::class, 'view'])->name('view');
+
         Route::get('/create', [SiswaController::class, 'create'])->name('create');
         Route::post('/', [SiswaController::class, 'store'])->name('store');
         Route::get('/{id}', [SiswaController::class, 'show'])->name('show');
@@ -134,6 +140,18 @@ Route::group(['middleware' => ['role:siswa|guru|superadmin','verified','auth']],
     });
 });
 
+Route::group(['prefix'=>'adminIndex', 'as'=>'adminIndex.', 'namespace'=>'adminIndex.'], function(){
+    Route::get('/', [AdminController::class, 'index'])->name('index');
+
+    Route::group(['prefix' => 'user', 'as' => 'user.','namespace'=> 'user.'], function () {
+        Route::get('/', [AdminUserController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [AdminUserController::class, 'view'])->name('view');
+        Route::put('/{id}', [AdminUserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminUserController::class, 'destroy'])->name('destroy');
+        Route::put('/role/{id}', [AdminUserController::class, 'updateRole'])->name('role');
+
+    });
+});
 
 
 

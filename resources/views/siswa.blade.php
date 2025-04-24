@@ -304,9 +304,19 @@
                                             </div>
                                             <div class="col-12">
                                                 <label for="images" class="form-label">Unggah Gambar (Opsional)</label>
-                                                <input class="form-control shadow-sm" type="file" id="images" name="images[]" multiple accept="image/*">
-                                                <small class="text-muted">Maksimal 2MB per gambar. Format: jpg, jpeg, png.</small>
+                                                {{-- <input class="form-control shadow-sm" type="file" id="images" name="images[]" multiple accept="image/*">
+                                                <small class="text-muted">Maksimal 2MB per gambar. Format: jpg, jpeg, png.</small> --}}
+                                                <label for="imageInput" class="form-label">Upload Gambar</label>
+                                                <div class="input-group">
+                                                    <input type="file" name="images[]" id="imageInput" accept="image/*" capture="environment" class="form-control" multiple>
+
+                                                    <span class="input-group-text bg-white">
+                                                        <i class="bi bi-camera-fill text-primary" style="cursor: pointer;" onclick="document.getElementById('imageInput').click()"></i>
+                                                    </span>
+                                                </div>
+                                                <small class="text-muted">Pilih dari galeri atau ambil gambar langsung.</small>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -329,7 +339,10 @@
                         {{-- <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button> --}}
                         <a href="{{ route('profil.siswa') }}" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
                         <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button>
-                        <button class="btn btn-outline-primary btn-sm">Sumber Informasi</button>
+                        <a href="{{ route('cv.generate') }}">
+                            <button  class="btn btn-outline-primary btn-sm">Convert ke PDF</button>
+                        </a>
+
                         <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#sertifikatModal">
                             Tambah Sertifikat
                         </button>
