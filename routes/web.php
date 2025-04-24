@@ -1,29 +1,26 @@
 <?php
 
+use App\Http\Controllers\ActivitiesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\CoverController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request; 
+use Illuminate\Http\Request;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\SelectedSkillsController;
+use App\Http\Controllers\CertificatesController;
+use App\Http\Controllers\ExperiencesController;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
 
 
 //route user
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
-Route::middleware(['auth', 'verified', 'role:siswa'])->group(function () {
-    Route::get('/siswa', [SiswaController::class, 'halamanSiswa'])->name('laman.siswa');
-    Route::get('/profil', [SiswaController::class, 'profil'])->name('profil.siswa');
-    Route::post('/profil/update', [SiswaController::class, 'updateProfil'])->name('profil.update');
-});
-
+// Route::get('/', function () {
+//     return view('dashboard');
+// });
 // verif dlu baru login
 Route::middleware('auth')->group(function (){
     Route::get('/email/verify', function () {
@@ -32,7 +29,7 @@ Route::middleware('auth')->group(function (){
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
         $request->fulfill();
-    
+
         return redirect()->route('verification.success')->with('success', 'Email berhasil diverifikasi.');
     })->middleware(['auth', 'signed'])->name('verification.verify');
 
@@ -69,9 +66,74 @@ Route::put('/profil/kontak', [SiswaController::class, 'updateKontak'])->name('pr
 
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/dashboard'); 
+    return redirect('/dashboard');
 })->name('logout');
 
 Route::get('/blog', function () {
     return view('blog');
 });
+
+// Route::middleware(['', 'verified', 'role:siswa'])->group(function () {
+//     Route::get('/siswa', [SiswaController::class, 'halamanSiswa'])->name('laman.siswa');
+//     Route::get('/profil', [SiswaController::class, 'profil'])->name('profil.siswa');
+//     Route::post('/profil/update', [SiswaController::class, 'updateProfil'])->name('profil.update');
+// });
+
+Route::group(['middleware' => ['role:siswa|guru|superadmin','verified','auth']], function(){
+    Route::group(['prefix' => 'profile', 'as' => 'profile.','namespace'=> 'profile.'], function () {
+        Route::get('/siswa', [SiswaController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [SiswaController::class, 'view'])->name('view');
+        Route::get('/create', [SiswaController::class, 'create'])->name('create');
+        Route::post('/', [SiswaController::class, 'store'])->name('store');
+        Route::get('/{id}', [SiswaController::class, 'show'])->name('show');
+        Route::get('/edit', [SiswaController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [SiswaController::class, 'update'])->name('update');
+        Route::delete('/{id}', [SiswaController::class, 'destroy'])->name('destroy');
+    });
+    Route::group(['prefix' => 'selectedskills', 'as' => 'selectedskills.','namespace'=> 'selectedskills.'], function () {
+        Route::get('/siswa', [SelectedSkillsController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [SelectedSkillsController::class, 'view'])->name('view');
+        Route::get('/create', [SelectedSkillsController::class, 'create'])->name('create');
+        Route::post('/', [SelectedSkillsController::class, 'store'])->name('store');
+        Route::get('/{id}', [SelectedSkillsController::class, 'show'])->name('show');
+        Route::get('/edit', [SelectedSkillsController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [SelectedSkillsController::class, 'update'])->name('update');
+        Route::delete('/{id}', [SelectedSkillsController::class, 'destroy'])->name('destroy');
+    });
+    Route::group(['prefix' => 'Certificates', 'as' => 'certificates.','namespace'=> 'certificates.'], function () {
+        Route::get('/siswa', [CertificatesController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [CertificatesController::class, 'view'])->name('view');
+        Route::get('/create', [CertificatesController::class, 'create'])->name('create');
+        Route::post('/', [CertificatesController::class, 'store'])->name('store');
+        Route::get('/{id}', [CertificatesController::class, 'show'])->name('show');
+        Route::get('/edit', [CertificatesController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CertificatesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CertificatesController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'experiences', 'as' => 'experiences.','namespace'=> 'experiences.'], function () {
+        Route::get('/siswa', [ExperiencesController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [ExperiencesController::class, 'view'])->name('view');
+        Route::get('/create', [ExperiencesController::class, 'create'])->name('create');
+        Route::post('/', [ExperiencesController::class, 'store'])->name('store');
+        Route::get('/{id}', [ExperiencesController::class, 'show'])->name('show');
+        Route::get('/edit', [ExperiencesController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ExperiencesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ExperiencesController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'activities', 'as' => 'activities.','namespace'=> 'activities.'], function () {
+        Route::get('/siswa', [ActivitiesController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [ActivitiesController::class, 'view'])->name('view');
+        Route::get('/create', [ActivitiesController::class, 'create'])->name('create');
+        Route::post('/', [ActivitiesController::class, 'store'])->name('store');
+        Route::get('/{id}', [ActivitiesController::class, 'show'])->name('show');
+        Route::get('/edit', [ActivitiesController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [ActivitiesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ActivitiesController::class, 'destroy'])->name('destroy');
+    });
+});
+
+
+
+

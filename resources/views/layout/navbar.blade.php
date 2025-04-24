@@ -59,9 +59,9 @@
                 <a href="#">Column 5 link 2</a>
                 <a href="#">Column 5 link 3</a>
               </li>
-            </ul> --}} 
+            </ul> --}}
             @auth
-            <li><a href="{{ route('laman.siswa') }}" class="{{ request()->is('siswa') ? 'active' : '' }}">Siswa</a></li>
+            <li><a href="{{ route('profile.index') }}" class="{{ request()->is('siswa') ? 'active' : '' }}">Siswa</a></li>
             @endauth
           </li>
           <li><a href="{{ url('/dashboard#contact') }}">Kontak</a></li>
@@ -69,8 +69,8 @@
           <a href="{{ route('login') }}" class="btn btn-outline-white d-flex align-items-center gap-2">
             <i class="fa-solid fa-right-to-bracket"></i> Login
           </a>
-          
-          @endguest 
+
+          @endguest
           @auth
           <li class="dropdown">
             <a href="#">
@@ -79,7 +79,7 @@
               <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
             </a>
             <ul>
-              <li><a href="{{ route('profil.siswa') }}">Profil Saya</a></li>
+              <li><a href="{{ route('profile.index') }}">Profil Saya</a></li>
               <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                   @csrf

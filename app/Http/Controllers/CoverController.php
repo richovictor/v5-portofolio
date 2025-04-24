@@ -28,7 +28,7 @@ class CoverController extends Controller
         $profil->cover = 'uploads/' . $filename;
         $profil->save();
 
-        return redirect()->route('laman.siswa')->with('success', 'Foto cover berhasil diperbarui');
+        return redirect()->route('profile.index')->with('success', 'Foto cover berhasil diperbarui');
     }
 
     public function hapusCover()
@@ -43,7 +43,7 @@ class CoverController extends Controller
         $profil->cover = null;
         $profil->save();
 
-        return redirect()->route('laman.siswa')->with('success', 'Foto cover berhasil dihapus');
+        return redirect()->route('profile.index')->with('success', 'Foto cover berhasil dihapus');
     }
 }
 

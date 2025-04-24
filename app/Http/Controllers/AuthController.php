@@ -90,6 +90,6 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('laman.siswa');
+        return redirect()->route('profile.index');
     }
 }

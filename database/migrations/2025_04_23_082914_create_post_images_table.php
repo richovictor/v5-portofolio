@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('profils', function (Blueprint $table) {
-            $table->string('cover')->nullable();
+        Schema::create('post_images', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+            $table->string('type');
+            $table->unsignedBigInteger('post_id');
+            $table->string('image');
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('profils', function (Blueprint $table) {
-            $table->dropColumn('cover');
-        });
+        Schema::dropIfExists('post_images');
     }
 };

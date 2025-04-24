@@ -4,109 +4,178 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Profil;
-
+use Illuminate\Support\Facades\Storage;
+use App\Models\Certificates;
+use App\Models\Experiences;
+use App\Models\Activities;
 class SiswaController extends Controller
 {
-    public function halamanSiswa()
+
+
+
+    public function index()
     {
         $user = Auth::user();
-        $profil = $user->profil;
+        $profil = $user->profile;
+        $selectedSkills = $user->selectedSkills;
 
-        return view('siswa', [
-            'profil' => $profil,
-            'email' => $user->email,
-            'telepon' => $profil?->telepon]);
+        // Ambil sertifikat, pengalaman, aktivitas berdasarkan user dan urutan terbaru
+        $certificates = Certificates::where('user_id', $user->id)->latest()->get();
+        $experiences = Experiences::where('user_id', $user->id)->latest()->get();
+        $activities = Activities::where('user_id', $user->id)->latest()->get();
+
+        return view('siswa', compact(
+            'user',
+            'profil',
+            'selectedSkills',
+            'certificates',
+            'experiences',
+            'activities'
+        ));
     }
-    
-    public function hapusCover()
+
+
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show( $experiences)
     {
         $user = Auth::user();
-        $profil = $user->profil;
+        $profile = $user->profile;
+        return view('profile', compact('user', 'profile'));
+    }
 
-        if ($profil && $profil->cover) {
-            $path = public_path($profil->cover);
-            if (file_exists($path)) {
-                unlink($path);
-            }
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($experiences)
+    {
+        //
+    }
 
-            $profil->cover = null;
-            $profil->save();
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+
+        // Ambil user yang sedang login
+        $user = Auth::user();
+
+        // Cek jika profil sudah ada atau belum
+        $profil = $user->profile;
+
+        // Jika profil belum ada, buat profil baru
+        if (!$profil) {
+            $profil = new Profil();
+            $profil->user_id = $user->id;
         }
 
-        return redirect()->route('laman.siswa')->with('success', 'Cover berhasil dihapus');
-    }
-
-    public function profil()
-    {
-        $user = Auth::user();
-        $profil = $user->profil;
-
-        return view('profil', compact('user', 'profil'));
-    }
-
-    public function updateProfil(Request $request)
-    {
-        $user = Auth::user();
-
-        $request->validate([
+        // Validasi data yang diinput
+        $validated = $request->validate([
             'username' => 'nullable|string|max:255',
-            // 'alamat' => 'nullable|string|max:255',
-            'no_telp' => 'nullable|string|max:15',
+            'phone_number' => 'nullable|string|max:15',
             'instagram' => 'nullable|string|max:255',
             'twitter' => 'nullable|string|max:255',
-            'foto' => 'nullable|image|max:2048',
+            'facebook' => 'nullable|string|max:255',
+            'link_instagram' => 'nullable|url|max:255',
+            'link_twitter' => 'nullable|url|max:255',
+            'link_facebook' => 'nullable|url|max:255',
         ]);
 
-        $profil = $user->profil ?? new Profil();
-        $profil->user_id = $user->id;
-
-        if ($request->hasFile('foto'))
-        {
-            $file = $request->file('foto');
-            $filename = time() . '.' .$file->getClientOriginalExtension();
-            $file->move(public_path('uploads'), $filename);
-            $profil->foto = 'uploads/' . $filename;
+        // Isi data profil dengan request jika ada
+        if ($request->has('username')) {
+            $profil->username = $request->username;
         }
 
-        $profil->username = $request->username;
-        // $profil->alamat = $request->alamat;
-        $profil->no_telp = $request->no_telp;
-        $profil->instagram = $request->instagram;
-        $profil->twitter = $request->twitter;
+        if ($request->has('phone_number')) {
+            $profil->phone_number = $request->phone_number;
+        }
+
+        if ($request->has('instagram')) {
+            $profil->instagram = $request->instagram;
+        }
+
+        if ($request->has('twitter')) {
+            $profil->twitter = $request->twitter;
+        }
+
+        if ($request->has('facebook')) {
+            $profil->facebook = $request->facebook;
+        }
+
+        if ($request->has('link_instagram')) {
+            $profil->link_instagram = $request->link_instagram;
+        }
+
+        if ($request->has('link_twitter')) {
+            $profil->link_twitter = $request->link_twitter;
+        }
+
+        if ($request->has('link_facebook')) {
+            $profil->link_facebook = $request->link_facebook;
+        }
+
+        $profil->profile_image = $this->handleUploadImage($request, 'profile_image', $profil->profile_image, 'uploads/foto_profil');
+        $profil->cover_image = $this->handleUploadImage($request, 'cover_image', $profil->cover_image, 'uploads/cover_profil');
+
+
+
+        // Simpan profil yang sudah diupdate
         $profil->save();
 
-        return redirect()->route('laman.siswa')->with('success', 'Profil berhasil diperbarui');
+        // Kembalikan response sukses
+        return redirect()->route('profile.index')->with('success', 'Profil berhasil diperbarui.');
     }
-    public function hapusFoto()
+    private function handleUploadImage($request, $fieldName, $oldFilePath, $uploadDir)
+    {
+        if ($request->hasFile($fieldName)) {
+            if ($oldFilePath && file_exists(public_path($oldFilePath))) {
+                unlink(public_path($oldFilePath));
+            }
+
+            $file = $request->file($fieldName);
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path($uploadDir), $filename);
+
+            return $uploadDir . '/' . $filename;
+        }
+
+        return $oldFilePath;
+    }
+
+
+    public function deletePhoto()
     {
         $user = Auth::user();
         $profil = $user->profil;
 
-        if ($profil && $profil->foto) {
-            // Hapus file dari storage (opsional)
-            $path = public_path($profil->foto);
-            if (file_exists($path)) {
-                unlink($path);
-            }
-
-            // Kosongkan kolom foto di database
+        if ($profil && $profil->foto && Storage::exists($profil->foto)) {
+            Storage::delete($profil->foto);
             $profil->foto = null;
             $profil->save();
         }
 
-        return redirect()->route('laman.siswa')->with('success', 'Foto profil berhasil dihapus');
+        return back()->with('success', 'Foto profil berhasil dihapus.');
     }
-    public function updateKontak(Request $request)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($experiences)
     {
-        $request->validate([
-            'no_telp' => 'required|string|max:15',
-        ]);
-
-        $user = Auth::user();
-        $profil = Profil::firstOrCreate(['user_id' => $user->id]);
-        $profil->no_telp = $request->no_telp;
-        $profil->save();
-
-        return redirect()->route('laman.siswa')->with('success', 'Informasi kontak berhasil diperbarui.');
+        //
     }
 }
