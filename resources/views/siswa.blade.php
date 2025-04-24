@@ -468,7 +468,7 @@
                 </div>
             </div>
         </div>
-  
+
         {{-- Section Tambahan --}}
         <div class="card-body border-top">
             <h5 class="fw-bold mb-4">Pengalaman</h5>
