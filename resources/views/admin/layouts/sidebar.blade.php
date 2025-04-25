@@ -24,33 +24,27 @@
                         <span data-key="t-ecommerce">User</span>
                     </a>
                 </li>
-            {{--
+
                 <li>
-                    <a href="{{route('admin.user.indexList')}}" >
+                    <a href="{{route('adminIndex.activities.index')}}" >
                         <i class=" bx bx-laugh"></i>
-                        <span data-key="t-ecommerce">User</span>
+                        <span data-key="t-ecommerce">Activities</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{route('admin.report.index')}}" >
+                    <a href="{{route('adminIndex.certificates.index')}}" >
                         <i class=" bx bxs-report"></i>
-                        <span data-key="t-ecommerce">Report</span>
+                        <span data-key="t-ecommerce">Certificates</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="{{route('admin.communities.index')}}" >
+                    <a href="{{route('adminIndex.experiences.index')}}" >
                         <i class=" bx bxs-group"></i>
-                        <span data-key="t-ecommerce">Category</span>
+                        <span data-key="t-ecommerce">Experiences</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{route('admin.comment.index')}}" >
-                        <i class=" bx bxs-message"></i>
-                        <span data-key="t-ecommerce">Comment</span>
-                    </a>
-                </li> --}}
                 {{-- <li>
                     <a href="{{route('admin.role.index')}}" >
                         <i class=" bx bx-key"></i>

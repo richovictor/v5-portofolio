@@ -81,10 +81,10 @@ class AuthController extends Controller
                 ->withErrors(['login' => 'Silakan verifikasi email Anda terlebih dahulu.']);
         }
 
-        // Cek apakah punya role siswa
-        if (!$user->hasRole('siswa')) {
-            return back()->withErrors(['login' => 'Akun anda tidak memiliki akses sebagai siswa.']);
-        }
+        // // Cek apakah punya role siswa
+        // if (!$user->hasRole('siswa')) {
+        //     return back()->withErrors(['login' => 'Akun anda tidak memiliki akses sebagai siswa.']);
+        // }
 
         // Jika semua valid, login
         Auth::login($user);

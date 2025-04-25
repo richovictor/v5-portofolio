@@ -46,9 +46,9 @@
                                      </li> --}}
                                  </ul>
                              </div>
-                             <div>
+                             {{-- <div>
                                  <a href="{{route('registration.process')}}" class="btn btn-light"><i class="bx bx-plus me-1"></i> Add New</a>
-                             </div>
+                             </div> --}}
 
                              <div class="dropdown">
                                  <a class="btn btn-link text-muted py-1 font-size-16 shadow-none dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -81,6 +81,7 @@
                              <th scope="col">Email</th>
                              <th scope="col">Role</th>
                              <th scope="col">Banner</th>
+                             <th scope="col">Status</th>
                              <th style="width: 80px; min-width: 80px;">Action</th>
                          </tr>
                          </thead>
@@ -145,6 +146,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        @if (!empty($user->email_verified_at))
+                                            <span class="badge bg-primary">Verified</span>
+                                        @else
+                                            <span class="badge bg-warning">Unverified</span>
+                                        @endif
                                     </td>
 
                                     <td>
@@ -240,21 +248,69 @@
                                                         <!-- Nickname -->
                                                         <div class="mb-3">
                                                             <label for="nickname-{{ $user->id }}" class="form-label">Nickname</label>
-                                                            <input type="text" name="nickname" id="nickname-{{ $user->id }}" class="form-control" value="{{ $user->profile->nickname ?? '' }}">
+                                                            <input type="text" name="username" id="nickname-{{ $user->id }}" class="form-control" value="{{ $user->profile->username ?? '' }}">
                                                         </div>
 
                                                         <!-- Foto Profil -->
                                                         <div class="mb-3">
-                                                            <label for="photo_profiles-{{ $user->id }}" class="form-label">Foto Profil</label>
-                                                            <input type="file" name="photo_profiles" id="photo_profiles-{{ $user->id }}" class="form-control">
+                                                            <label for="profile_image-{{ $user->id }}" class="form-label">Foto Profil</label>
+                                                            <input type="file" name="profile_image" id="profile_image-{{ $user->id }}" class="form-control">
                                                             <small class="text-muted">Kosongkan jika tidak ingin mengubah foto profil.</small>
                                                         </div>
 
                                                         <!-- Foto Banner -->
                                                         <div class="mb-3">
                                                             <label for="photo_banner-{{ $user->id }}" class="form-label">Foto Banner</label>
-                                                            <input type="file" name="photo_banner" id="photo_banner-{{ $user->id }}" class="form-control">
+                                                            <input type="file" name="cover_image" id="photo_banner-{{ $user->id }}" class="form-control">
                                                             <small class="text-muted">Kosongkan jika tidak ingin mengubah foto banner.</small>
+                                                        </div>
+                                                        <!-- Phone Number -->
+                                                        <div class="mb-3">
+                                                            <label for="phone_number-{{ $user->id }}" class="form-label">Phone Number</label>
+                                                            <input type="text" name="phone_number" id="phone_number-{{ $user->id }}" class="form-control" value="{{ $user->profile->phone_number ?? '' }}">
+                                                        </div>
+                                                        <!-- Verified -->
+                                                        <div class="mb-3">
+                                                            <label for="verified_status-{{ $user->id }}" class="form-label">Verified Status</label>
+                                                            <select name="verified_status" id="verified_status-{{ $user->id }}" class="form-select">
+                                                                <option value="1" {{ !empty($user->email_verified_at) ? 'selected' : '' }}>Verified</option>
+                                                                <option value="0" {{ empty($user->email_verified_at) ? 'selected' : '' }}>Unverified</option>
+                                                            </select>
+                                                        </div>
+                                                        <!-- Instagram -->
+                                                        <div class="mb-3">
+                                                            <label for="instagram-{{ $user->id }}" class="form-label">Instagram</label>
+                                                            <input type="text" name="instagram" id="instagram-{{ $user->id }}" class="form-control" value="{{ $user->profile->instagram ?? '' }}">
+                                                        </div>
+
+                                                        <!-- Twitter -->
+                                                        <div class="mb-3">
+                                                            <label for="twitter-{{ $user->id }}" class="form-label">Twitter</label>
+                                                            <input type="text" name="twitter" id="twitter-{{ $user->id }}" class="form-control" value="{{ $user->profile->twitter ?? '' }}">
+                                                        </div>
+
+                                                        <!-- Facebook -->
+                                                        <div class="mb-3">
+                                                            <label for="facebook-{{ $user->id }}" class="form-label">Facebook</label>
+                                                            <input type="text" name="facebook" id="facebook-{{ $user->id }}" class="form-control" value="{{ $user->profile->facebook ?? '' }}">
+                                                        </div>
+
+                                                        <!-- Link Instagram -->
+                                                        <div class="mb-3">
+                                                            <label for="link_instagram-{{ $user->id }}" class="form-label">Link Instagram</label>
+                                                            <input type="url" name="link_instagram" id="link_instagram-{{ $user->id }}" class="form-control" value="{{ $user->profile->link_instagram ?? '' }}">
+                                                        </div>
+
+                                                        <!-- Link Twitter -->
+                                                        <div class="mb-3">
+                                                            <label for="link_twitter-{{ $user->id }}" class="form-label">Link Twitter</label>
+                                                            <input type="url" name="link_twitter" id="link_twitter-{{ $user->id }}" class="form-control" value="{{ $user->profile->link_twitter ?? '' }}">
+                                                        </div>
+
+                                                        <!-- Link Facebook -->
+                                                        <div class="mb-3">
+                                                            <label for="link_facebook-{{ $user->id }}" class="form-label">Link Facebook</label>
+                                                            <input type="url" name="link_facebook" id="link_facebook-{{ $user->id }}" class="form-control" value="{{ $user->profile->link_facebook ?? '' }}">
                                                         </div>
 
                                                         <!-- Password -->
@@ -297,53 +353,7 @@
                                     </div>
                                     <!-- end of modal untuk menghapus user -->
 
-                                    {{-- <!-- Modal Suspend -->
-                                    <div class="modal fade" id="modalSuspend-{{ $user->id }}" tabindex="-1" aria-labelledby="modalSuspendLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalSuspendLabel">Suspend Account</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure you want to suspend {{ $user->name }}'s account?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="{{ route('adminIndex.user.suspend', $user->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="btn btn-danger">Suspend</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- End of modal suspend -->
 
-                                    <!-- Modal Unsuspend -->
-                                    <div class="modal fade" id="modalUnsuspend-{{ $user->id }}" tabindex="-1" aria-labelledby="modalUnsuspendLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalUnsuspendLabel">Unsuspend Account</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure you want to unsuspend {{ $user->name }}'s account?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <form action="{{ route('adminIndex.user.unsuspend', $user->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit" class="btn btn-success">Unsuspend</button>
-                                                    </form>
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- End of modal unsuspend --> --}}
 
                                 </tr>
                             @endforeach

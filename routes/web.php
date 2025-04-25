@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ActivitiesController;
+use App\Http\Controllers\admin\AdminActivitiesController;
+use App\Http\Controllers\admin\AdminCertificatesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
@@ -17,10 +19,11 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CVController;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\AdminExperiencesController;
 use App\Http\Controllers\admin\AdminUserController;
 
 //route user
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('dashboard');
 // Route::get('/', function () {
 //     return view('dashboard');
 // });
@@ -69,7 +72,7 @@ Route::put('/profil/kontak', [SiswaController::class, 'updateKontak'])->name('pr
 
 Route::post('/logout', function () {
     Auth::logout();
-    return redirect('/');
+    return redirect()->route('dashboard');
 })->name('logout');
 
 Route::get('/blog', function () {
@@ -83,7 +86,8 @@ Route::get('/blog', function () {
 // });
 Route::get('/all-student', [HomeController::class, 'seeall'])->name('allstudent.seeall');
 Route::get('/view/{id}/', [SiswaController::class, 'view'])->name('profile.view');
-Route::group(['middleware' => ['role:siswa|guru|superadmin','verified','auth']], function(){
+
+Route::group(['middleware' => ['role:siswa|admin','verified','auth']], function(){
     Route::get('/cetak-cv', [CVController::class, 'generatePDF'])->name('cv.generate');
 
     Route::group(['prefix' => 'profile', 'as' => 'profile.','namespace'=> 'profile.'], function () {
@@ -140,7 +144,7 @@ Route::group(['middleware' => ['role:siswa|guru|superadmin','verified','auth']],
     });
 });
 
-Route::group(['prefix'=>'adminIndex', 'as'=>'adminIndex.', 'namespace'=>'adminIndex.'], function(){
+Route::group(['prefix'=>'adminIndex', 'as'=>'adminIndex.', 'namespace'=>'adminIndex.','middleware' => ['role:admin','verified','auth']], function(){
     Route::get('/', [AdminController::class, 'index'])->name('index');
 
     Route::group(['prefix' => 'user', 'as' => 'user.','namespace'=> 'user.'], function () {
@@ -149,7 +153,28 @@ Route::group(['prefix'=>'adminIndex', 'as'=>'adminIndex.', 'namespace'=>'adminIn
         Route::put('/{id}', [AdminUserController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdminUserController::class, 'destroy'])->name('destroy');
         Route::put('/role/{id}', [AdminUserController::class, 'updateRole'])->name('role');
+    });
+    Route::group(['prefix' => 'activities', 'as' => 'activities.','namespace'=> 'activities.'], function () {
+        Route::get('/', [AdminActivitiesController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [AdminActivitiesController::class, 'view'])->name('view');
+        Route::put('/{id}', [AdminActivitiesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminActivitiesController::class, 'destroy'])->name('destroy');
+        Route::put('/role/{id}', [AdminActivitiesController::class, 'updateRole'])->name('role');
+    });
+    Route::group(['prefix' => 'certificates', 'as' => 'certificates.','namespace'=> 'certificates.'], function () {
+        Route::get('/', [AdminCertificatesController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [AdminCertificatesController::class, 'view'])->name('view');
+        Route::put('/{id}', [AdminCertificatesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminCertificatesController::class, 'destroy'])->name('destroy');
+        Route::put('/role/{id}', [AdminCertificatesController::class, 'updateRole'])->name('role');
+    });
 
+    Route::group(['prefix' => 'experiences', 'as' => 'experiences.','namespace'=> 'experiences.'], function () {
+        Route::get('/', [AdminExperiencesController::class, 'index'])->name('index');
+        Route::get('/view/{id}/', [AdminExperiencesController::class, 'view'])->name('view');
+        Route::put('/{id}', [AdminExperiencesController::class, 'update'])->name('update');
+        Route::delete('/{id}', [AdminExperiencesController::class, 'destroy'])->name('destroy');
+        Route::put('/role/{id}', [AdminExperiencesController::class, 'updateRole'])->name('role');
     });
 });
 

@@ -71,6 +71,7 @@
           </a>
 
           @endguest
+
           @auth
           <li class="dropdown">
             <a href="#">
@@ -80,6 +81,10 @@
             </a>
             <ul>
               <li><a href="{{ route('profile.index') }}">Profil Saya</a></li>
+                @if(Auth::user() && Auth::user()->hasRole('admin'))
+                    <li><a href="{{ route('adminIndex.index') }}">Halaman Admin</a></li>
+                @endif
+
               <li>
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                   @csrf
@@ -89,6 +94,7 @@
             </ul>
           </li>
           @endauth
+
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
