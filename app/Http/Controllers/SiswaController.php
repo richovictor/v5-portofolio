@@ -9,6 +9,7 @@ use App\Models\Certificates;
 use App\Models\Experiences;
 use App\Models\Activities;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 class SiswaController extends Controller
 {
 
@@ -24,6 +25,12 @@ class SiswaController extends Controller
         $certificates = Certificates::where('user_id', $user->id)->latest()->get();
         $experiences = Experiences::where('user_id', $user->id)->latest()->get();
         $activities = Activities::where('user_id', $user->id)->latest()->get();
+        $loginStats = DB::table('sessions')
+        ->selectRaw('DATE(FROM_UNIXTIME(last_activity)) as login_date, COUNT(*) as total_logins')
+        ->where('user_id', $user->id) // ganti dengan ID user yg diinginkan
+        ->groupBy('login_date')
+        ->orderBy('login_date')
+        ->get();
 
         return view('siswa', compact(
             'user',
@@ -31,7 +38,8 @@ class SiswaController extends Controller
             'selectedSkills',
             'certificates',
             'experiences',
-            'activities'
+            'activities',
+            'loginStats'
         ));
     }
 
@@ -40,7 +48,12 @@ class SiswaController extends Controller
         $user = User::where('id', $id)->first();
         $profil = $user->profile;
         $selectedSkills = $user->selectedSkills;
-
+        $loginStats = DB::table('sessions')
+        ->selectRaw('DATE(FROM_UNIXTIME(last_activity)) as login_date, COUNT(*) as total_logins')
+        ->where('user_id', $id) // ganti dengan ID user yg diinginkan
+        ->groupBy('login_date')
+        ->orderBy('login_date')
+        ->get();
         // Ambil sertifikat, pengalaman, aktivitas berdasarkan user dan urutan terbaru
         $certificates = Certificates::where('user_id', $user->id)->latest()->get();
         $experiences = Experiences::where('user_id', $user->id)->latest()->get();
@@ -52,7 +65,8 @@ class SiswaController extends Controller
             'selectedSkills',
             'certificates',
             'experiences',
-            'activities'
+            'activities',
+            'loginStats'
         ));
     }
 

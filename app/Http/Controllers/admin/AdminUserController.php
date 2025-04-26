@@ -113,6 +113,21 @@ class AdminUserController extends Controller
         return $oldFilePath;
     }
 
+    public function updateRole(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validasi input
+        $validated = $request->validate([
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,name',
+        ]);
+
+        // Sync role ke user
+        $user->syncRoles($validated['roles']);
+
+        return redirect()->back()->with('success', 'Role pengguna berhasil diperbarui.');
+    }
     public function destroy($id)
     {
         $user = User::findOrFail($id);

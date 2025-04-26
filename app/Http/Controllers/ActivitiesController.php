@@ -6,6 +6,7 @@ use App\Models\activities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PostImages;
+use Illuminate\Support\Facades\Storage;
 
 class ActivitiesController extends Controller
 {
@@ -80,16 +81,46 @@ class ActivitiesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, activities $activities)
+    public function update(Request $request, $id)
     {
-        //
+        $activity = activities::findOrFail($id);
+
+        // Validasi input
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        // Update aktivitas
+        $activity->update($validated);
+
+        // Menyimpan gambar jika ada
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $activity->images()->create([
+                    'image' => $image->store('activities'),
+                ]);
+            }
+        }
+
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(activities $activities)
+    public function destroy($id)
     {
-        //
+        $activity = activities::findOrFail($id);
+
+        // Menghapus gambar yang terhubung jika ada
+        foreach ($activity->images as $image) {
+            Storage::delete($image->image);
+        }
+
+        // Hapus aktivitas
+        $activity->delete();
+
+        return redirect()->back();
     }
 }

@@ -520,30 +520,38 @@
         <div class="card-body border-top">
             <h5 class="fw-bold mb-4">Aktivitas</h5>
 
-        @forelse ($activities as $act)
-            <div class="border rounded p-4 mb-4 shadow-sm bg-white">
-                <h6 class="fw-bold mb-1">{{ $act->title }}</h6>
-                <small class="text-muted">{{ $act->location }}</small>
+            @forelse ($activities as $act)
+                <div class="border rounded p-4 mb-4 shadow-sm bg-white">
+                    <h6 class="fw-bold mb-1">{{ $act->title }}</h6>
+                    <small class="text-muted">{{ $act->location }}</small>
 
-                @if ($act->description)
-                    <p class="mt-2 mb-0">{{ $act->description }}</p>
-                @endif
-                <div class="d-flex flex-wrap gap-3 mt-2">
-                    @foreach ($act->images as $img)
-                        <div class="d-flex align-items-center">
-                            <a href="{{ asset('storage/' . $img->image) }}" target="_blank">
-                                <img src="{{ asset('storage/' . $img->image) }}" alt="sertifikat" class="img-thumbnail rounded" style="height: 64px;">
-                            </a>
-                            <span class="ms-2 small">{{ basename($img->image) }}</span>
-                        </div>
-                    @endforeach
+                    @if ($act->description)
+                        <p class="mt-2 mb-0">{{ $act->description }}</p>
+                    @endif
+                    <div class="d-flex flex-wrap gap-3 mt-2">
+                        @foreach ($act->images as $img)
+                            <div class="d-flex align-items-center">
+                                <a href="{{ asset('storage/' . $img->image) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $img->image) }}" alt="sertifikat" class="img-thumbnail rounded" style="height: 64px;">
+                                </a>
+                                <span class="ms-2 small">{{ basename($img->image) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-        @empty
-            <p class="text-muted">Belum ada aktivitas yang ditambahkan.</p>
-        @endforelse
+            @empty
+                <p class="text-muted">Belum ada aktivitas yang ditambahkan.</p>
+            @endforelse
 
         </div>
+
+
+    </div>
+    <div class="card-body border-top py-5">
+        <div class="container">
+            <canvas id="loginChart" height="100"></canvas>
+        </div>
+
     </div>
 </div>
 
@@ -567,6 +575,50 @@
         }
     });
 
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('loginChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($loginStats->pluck('login_date')) !!},
+            datasets: [{
+                label: 'Jumlah Login per Tanggal',
+                data: {!! json_encode($loginStats->pluck('total_logins')) !!},
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.3, // untuk garis yang lebih halus
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Login'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tanggal'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
+    });
 </script>
 @endpush
 

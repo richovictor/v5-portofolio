@@ -6,6 +6,7 @@ use App\Models\experiences;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PostImages;
+use Illuminate\Support\Facades\Storage;
 
 class ExperiencesController extends Controller
 {
@@ -86,16 +87,49 @@ class ExperiencesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, experiences $experiences)
+    public function update(Request $request, $id)
     {
-        //
+        $experience = experiences::findOrFail($id);
+
+        // Validasi input
+        $validated = $request->validate([
+            'position' => 'required|string|max:255',
+            'agency' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        // Update pengalaman kerja
+        $experience->update($validated);
+
+        // Menyimpan gambar jika ada
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $experience->images()->create([
+                    'image' => $image->store('experiences'),
+                ]);
+            }
+        }
+
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(experiences $experiences)
+    public function destroy($id)
     {
-        //
+        $experience = experiences::findOrFail($id);
+
+        // Menghapus gambar yang terhubung jika ada
+        foreach ($experience->images as $image) {
+            Storage::delete($image->image);
+        }
+
+        // Hapus pengalaman
+        $experience->delete();
+
+        return redirect()->back();
     }
 }

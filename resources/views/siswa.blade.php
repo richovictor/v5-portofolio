@@ -171,7 +171,7 @@
                                             @csrf
                                             @method('PUT')
                                             @php
-                                                $options = ['Web Developer', 'CSS', 'HTML', 'JavaScript', 'PHP', 'Laravel, Pemeliharaan dan perakitan computer, Jaringan Komputer, Desainer UI/UX, Pengembang web'];
+                                                $options = ['Web Developer', 'CSS', 'HTML', 'JavaScript', 'PHP', 'Laravel', 'Pemeliharaan dan perakitan computer', 'Jaringan Komputer', 'Desainer UI/UX', 'Pengembang web'];
                                                 $selected = explode(',', $selectedSkills->skills ?? '');
                                             @endphp
 
@@ -347,9 +347,9 @@
                             Tambah Sertifikat
                         </button>
 
-                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#pengalamanModal">
-                            Tambah Pengalaman
-                        </button>
+                            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#pengalamanModal">
+                                Tambah Pengalaman
+                            </button>
 
                         <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#aktivitasModal">
                             Tambah Aktivitas
@@ -436,10 +436,23 @@
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <p class="mb-1 text-muted small">Terbuka untuk bekerja</p>
-                    <p class="mb-1 fw-semibold">Peran Web Designer dan Pengembang Web</p>
-                    <a href="#" class="text-primary small text-decoration-none">Tampilkan detail</a>
+                    <div class="mt-2">
+                        @php
+                            $skills = explode(',', $selectedSkills->skills ?? '');
+                            // dd($skills);
+                        @endphp
+
+                        @if (!empty($selectedSkills) && !empty($selectedSkills->skills))
+                            @foreach ($skills as $skill)
+                                <span class="badge bg-primary text-light me-1 mb-1">{{ trim($skill) }}</span>
+                            @endforeach
+                        @else
+                            <span class="text-muted small">Belum ada skill yang ditambahkan</span>
+                        @endif
+                    </div>
+
                 </div>
-                <button class="btn btn-sm btn-light rounded-circle">
+                <button class="btn btn-sm btn-light rounded-circle" data-bs-toggle="modal" data-bs-target="#kemampuanModal">
                     <i class="bi bi-pencil"></i>
                 </button>
 
@@ -486,12 +499,83 @@
         <div class="card-body border-top">
             <h5 class="fw-bold mb-4">Pengalaman</h5>
             @forelse ($experiences as $exp)
+                <!-- Modal Edit Pengalaman -->
+                <div class="modal fade" id="editPengalamanModal{{ $exp->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $exp->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <form action="{{ route('experiences.update', $exp->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="editModalLabel{{ $exp->id }}">Edit Pengalaman</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="position{{ $exp->id }}" class="form-label">Posisi</label>
+                                        <input type="text" name="position" id="position{{ $exp->id }}" class="form-control" value="{{ $exp->position }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="agency{{ $exp->id }}" class="form-label">Perusahaan/Instansi</label>
+                                        <input type="text" name="agency" id="agency{{ $exp->id }}" class="form-control" value="{{ $exp->agency }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="location{{ $exp->id }}" class="form-label">Lokasi</label>
+                                        <input type="text" name="location" id="location{{ $exp->id }}" class="form-control" value="{{ $exp->location }}">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="start_date{{ $exp->id }}" class="form-label">Tanggal Mulai</label>
+                                            <input type="date" name="start_date" id="start_date{{ $exp->id }}" class="form-control" value="{{ $exp->start_date }}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="end_date{{ $exp->id }}" class="form-label">Tanggal Selesai (Opsional)</label>
+                                            <input type="date" name="end_date" id="end_date{{ $exp->id }}" class="form-control" value="{{ $exp->end_date }}">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description{{ $exp->id }}" class="form-label">Deskripsi</label>
+                                        <textarea name="description" id="description{{ $exp->id }}" class="form-control" rows="4">{{ $exp->description }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="images{{ $exp->id }}" class="form-label">Upload Sertifikat (Opsional)</label>
+                                        <input type="file" name="images[]" id="images{{ $exp->id }}" class="form-control" multiple>
+                                        <small class="text-muted">File saat ini akan tetap tersimpan jika tidak ada yang dipilih.</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="deletePengalamanModal{{ $exp->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $exp->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="deleteModalLabel{{ $exp->id }}">Hapus Pengalaman</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body">
+                                Apakah kamu yakin ingin menghapus pengalaman <strong>{{ $exp->position }}</strong> di <strong>{{ $exp->agency }}</strong>?
+                                Tindakan ini tidak dapat dibatalkan.
+                            </div>
+                            <div class="modal-footer">
+                                <form action="{{ route('experiences.destroy', $exp->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="border rounded p-4 mb-4 shadow-sm bg-white">
-                    <div class="d-flex align-items-start mb-2">
-                        {{-- Gambar Dummy Perusahaan --}}
-                        {{-- <div class="me-3">
-                            <img src="https://via.placeholder.com/48" class="rounded" alt="Company Logo">
-                        </div> --}}
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        {{-- Info Pengalaman --}}
                         <div>
                             <h6 class="fw-bold mb-1">{{ $exp->position }}</h6>
                             <span class="text-muted">{{ $exp->agency }} &middot; Magang</span><br>
@@ -502,17 +586,36 @@
                             </small><br>
                             <small class="text-muted">{{ $exp->location }} &middot; Di lokasi</small>
                         </div>
+
+                        {{-- Tombol Kebab Menu --}}
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editPengalamanModal{{ $exp->id }}">
+                                        <i class="bi bi-pencil-square me-2"></i>Edit
+                                    </button>
+                                </li>
+                                <li>
+                                    <form action="{{ route('experiences.destroy', $exp->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus pengalaman ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deletePengalamanModal{{ $exp->id }}">
+                                            <i class="bi bi-trash me-2"></i>Hapus
+                                        </button>
+
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
+                    {{-- Deskripsi --}}
                     <p class="mb-2">{{ $exp->description }}</p>
 
-                    {{-- Skill Dummy --}}
-                    {{-- <p class="mb-2">
-                        <i class="bi bi-gem me-1"></i>
-                        <span>Tax, Tax Accounting dan <strong>+2 keahlian</strong></span>
-                    </p> --}}
-
-                    {{-- Gambar Sertifikat (PostImages) --}}
+                    {{-- Gambar Sertifikat --}}
                     <div class="d-flex flex-wrap gap-3">
                         @foreach ($exp->images as $img)
                             <div class="d-flex align-items-center">
@@ -527,8 +630,8 @@
             @empty
                 <p class="text-muted">Belum ada pengalaman kerja yang dimasukkan.</p>
             @endforelse
-
         </div>
+
 
         <div class="card-body border-top">
             <h5 class="fw-bold mb-4">Sertifikat</h5>
@@ -553,39 +656,214 @@
                             </div>
                         @endforeach
                     </div>
+
+                    {{-- Dropdown untuk Edit dan Delete --}}
+                    <div class="dropdown d-flex justify-content-end mt-3">
+                        <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editSertifikatModal{{ $cert->id }}">
+                                    <i class="bi bi-pencil-square me-2"></i>Edit
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteSertifikatModal{{ $cert->id }}">
+                                    <i class="bi bi-trash me-2"></i>Hapus
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Modal Edit Sertifikat -->
+                <div class="modal fade" id="editSertifikatModal{{ $cert->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $cert->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <form action="{{ route('certificates.update', $cert->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="editModalLabel{{ $cert->id }}">Edit Sertifikat</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="title{{ $cert->id }}" class="form-label">Judul Sertifikat</label>
+                                        <input type="text" name="title" id="title{{ $cert->id }}" class="form-control" value="{{ $cert->title }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="agency{{ $cert->id }}" class="form-label">Perusahaan/Instansi</label>
+                                        <input type="text" name="agency" id="agency{{ $cert->id }}" class="form-control" value="{{ $cert->agency }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="location{{ $cert->id }}" class="form-label">Lokasi</label>
+                                        <input type="text" name="location" id="location{{ $cert->id }}" class="form-control" value="{{ $cert->location }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description{{ $cert->id }}" class="form-label">Deskripsi</label>
+                                        <textarea name="description" id="description{{ $cert->id }}" class="form-control" rows="4">{{ $cert->description }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="images{{ $cert->id }}" class="form-label">Upload Sertifikat Baru (Opsional)</label>
+                                        <input type="file" name="images[]" id="images{{ $cert->id }}" class="form-control" multiple>
+                                        <small class="text-muted">File saat ini akan tetap tersimpan jika tidak ada yang dipilih.</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Delete Sertifikat -->
+                <div class="modal fade" id="deleteSertifikatModal{{ $cert->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $cert->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="deleteModalLabel{{ $cert->id }}">Hapus Sertifikat</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body">
+                                Apakah kamu yakin ingin menghapus sertifikat <strong>{{ $cert->title }}</strong> yang diterbitkan oleh <strong>{{ $cert->agency }}</strong>? Tindakan ini tidak dapat dibatalkan.
+                            </div>
+                            <div class="modal-footer">
+                                <form action="{{ route('certificates.destroy', $cert->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             @empty
                 <p class="text-muted">Belum ada sertifikat yang ditambahkan.</p>
             @endforelse
         </div>
 
+
         <div class="card-body border-top">
             <h5 class="fw-bold mb-4">Aktivitas</h5>
 
-        @forelse ($activities as $act)
-            <div class="border rounded p-4 mb-4 shadow-sm bg-white">
-                <h6 class="fw-bold mb-1">{{ $act->title }}</h6>
-                <small class="text-muted">{{ $act->location }}</small>
+            @forelse ($activities as $act)
+                <div class="border rounded p-4 mb-4 shadow-sm bg-white">
+                    <h6 class="fw-bold mb-1">{{ $act->title }}</h6>
+                    <small class="text-muted">{{ $act->location }}</small>
 
-                @if ($act->description)
-                    <p class="mt-2 mb-0">{{ $act->description }}</p>
-                @endif
-                <div class="d-flex flex-wrap gap-3 mt-2">
-                    @foreach ($act->images as $img)
-                        <div class="d-flex align-items-center">
-                            <a href="{{ asset('storage/' . $img->image) }}" target="_blank">
-                                <img src="{{ asset('storage/' . $img->image) }}" alt="sertifikat" class="img-thumbnail rounded" style="height: 64px;">
-                            </a>
-                            <span class="ms-2 small">{{ basename($img->image) }}</span>
-                        </div>
-                    @endforeach
+                    @if ($act->description)
+                        <p class="mt-2 mb-0">{{ $act->description }}</p>
+                    @endif
+                    <div class="d-flex flex-wrap gap-3 mt-2">
+                        @foreach ($act->images as $img)
+                            <div class="d-flex align-items-center">
+                                <a href="{{ asset('storage/' . $img->image) }}" target="_blank">
+                                    <img src="{{ asset('storage/' . $img->image) }}" alt="sertifikat" class="img-thumbnail rounded" style="height: 64px;">
+                                </a>
+                                <span class="ms-2 small">{{ basename($img->image) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Dropdown untuk Edit dan Delete --}}
+                    <div class="dropdown d-flex justify-content-end mt-3">
+                        <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editActivityModal{{ $act->id }}">
+                                    <i class="bi bi-pencil-square me-2"></i>Edit
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteActivityModal{{ $act->id }}">
+                                    <i class="bi bi-trash me-2"></i>Hapus
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        @empty
-            <p class="text-muted">Belum ada aktivitas yang ditambahkan.</p>
-        @endforelse
 
+                <!-- Modal Edit Aktivitas -->
+                <div class="modal fade" id="editActivityModal{{ $act->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $act->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <form action="{{ route('activities.update', $act->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="editModalLabel{{ $act->id }}">Edit Aktivitas</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="title{{ $act->id }}" class="form-label">Judul Aktivitas</label>
+                                        <input type="text" name="title" id="title{{ $act->id }}" class="form-control" value="{{ $act->title }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="location{{ $act->id }}" class="form-label">Lokasi</label>
+                                        <input type="text" name="location" id="location{{ $act->id }}" class="form-control" value="{{ $act->location }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description{{ $act->id }}" class="form-label">Deskripsi</label>
+                                        <textarea name="description" id="description{{ $act->id }}" class="form-control" rows="4">{{ $act->description }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="images{{ $act->id }}" class="form-label">Upload Gambar Baru (Opsional)</label>
+                                        <input type="file" name="images[]" id="images{{ $act->id }}" class="form-control" multiple>
+                                        <small class="text-muted">File saat ini akan tetap tersimpan jika tidak ada yang dipilih.</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Delete Aktivitas -->
+                <div class="modal fade" id="deleteActivityModal{{ $act->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $act->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-danger text-white">
+                                <h5 class="modal-title" id="deleteModalLabel{{ $act->id }}">Hapus Aktivitas</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                            </div>
+                            <div class="modal-body">
+                                Apakah kamu yakin ingin menghapus aktivitas <strong>{{ $act->title }}</strong> yang berada di <strong>{{ $act->location }}</strong>? Tindakan ini tidak dapat dibatalkan.
+                            </div>
+                            <div class="modal-footer">
+                                <form action="{{ route('activities.destroy', $act->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <button type="submit" class="btn btn-danger">Hapus</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <p class="text-muted">Belum ada aktivitas yang ditambahkan.</p>
+            @endforelse
         </div>
+
+
+
+    </div>
+    <div class="card-body border-top">
+        <div class="container">
+            <canvas id="loginChart" height="100"></canvas>
+        </div>
+
     </div>
 </div>
 
@@ -627,6 +905,50 @@
         let modalElement = document.getElementById('modalKeahlian');
         let modal = bootstrap.Modal.getInstance(modalElement);
         modal.hide();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('loginChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($loginStats->pluck('login_date')) !!},
+            datasets: [{
+                label: 'Jumlah Login per Tanggal',
+                data: {!! json_encode($loginStats->pluck('total_logins')) !!},
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.3, // untuk garis yang lebih halus
+                pointRadius: 4,
+                pointHoverRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Jumlah Login'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tanggal'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                }
+            }
+        }
     });
 </script>
 @endpush

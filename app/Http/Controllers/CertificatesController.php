@@ -6,6 +6,7 @@ use App\Models\certificates;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PostImages;
+use Illuminate\Support\Facades\Storage;
 
 class CertificatesController extends Controller
 {
@@ -84,16 +85,47 @@ class CertificatesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, certificates $certificates)
+    public function update(Request $request, $id)
     {
-        //
+        $certificate = certificates::findOrFail($id);
+
+        // Validasi input
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'agency' => 'required|string|max:255',
+            'location' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
+        ]);
+
+        // Update sertifikat
+        $certificate->update($validated);
+
+        // Menyimpan gambar jika ada
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $certificate->images()->create([
+                    'image' => $image->store('certificates'),
+                ]);
+            }
+        }
+
+        return redirect()->back();;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(certificates $certificates)
+    public function destroy($id)
     {
-        //
+        $certificate = certificates::findOrFail($id);
+
+        // Menghapus gambar yang terhubung jika ada
+        foreach ($certificate->images as $image) {
+            Storage::delete($image->image);
+        }
+
+        // Hapus sertifikat
+        $certificate->delete();
+
+        return redirect()->back()->with('success', 'Sertifikat berhasil dihapus');
     }
 }
