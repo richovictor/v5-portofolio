@@ -31,10 +31,10 @@
                  class="position-absolute top-0 start-0"
                  style="width: 100%; height:100%; object-fit:cover; pointer-events:none;">
 
-            {{-- Tombol pensil (trigger file input) --}}
+            {{-- Tombol pensil (trigger file input)
             <button id="editCoverBtn" class="btn btn-light position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" style="z-index: 20;">
                 <i class="bi bi-pencil"></i>
-            </button>
+            </button> --}}
 
             {{-- @if ($profil?->cover)
             <form action="{{ route('profil.hapusCover') }}" method="POST" class="position-absolute bottom-0 end-0 m-2" style="z-index: 20;">
@@ -337,7 +337,7 @@
                     <!-- SUmber Informasi -->
                     <div class="d-flex flex-wrap gap-2">
                         {{-- <button class="btn btn-outline-primary btn-sm">Terbuka untuk</button> --}}
-                        <a href="" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
+                        <a href="{{route('profile.edit')}}" class="btn btn-outline-primary btn-sm">Tambah bagian profil</a>
                         <button class="btn btn-outline-primary btn-sm">Optimalkan profil Anda</button>
                         <a href="{{ route('cv.generate') }}">
                             <button  class="btn btn-outline-primary btn-sm">Convert ke PDF</button>

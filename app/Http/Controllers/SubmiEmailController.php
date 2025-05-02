@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\submiEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use App\Mail\ContactMail;
+
 
 class SubmiEmailController extends Controller
 {
@@ -22,7 +25,7 @@ class SubmiEmailController extends Controller
             'message' => 'nullable|string|max:1000',
         ]);
 
-        SubmiEmail::create($validated);
+        Mail::to('vohisma@portovolio.my.id')->send(new ContactMail($validated));
 
         return redirect()->back()->with('success', 'Pesan Anda telah dikirim!');
     }

@@ -10,7 +10,7 @@
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="/" class="{{request()->is('dashboard')?'active' : ''}}">Beranda<br></a></li>
-          <li><a href="{{ url('/dashboard#about') }}">Tentang</a></li>
+          <li><a href="{{ url('/#about') }}">Tentang</a></li>
           {{-- <li><a href="#services">Layanan</a></li> --}}
           <li><a href="{{ url('/dashboard#portfolio') }}">Portofolio</a></li>
           {{-- <li><a href="#team">Tim</a></li> --}}
@@ -64,7 +64,7 @@
             <li><a href="{{ route('profile.index') }}" class="{{ request()->is('siswa') ? 'active' : '' }}">Siswa</a></li>
             @endauth
           </li>
-          <li><a href="{{ url('/dashboard#contact') }}">Kontak</a></li>
+          <li><a href="{{ url('/#contact') }}">Kontak</a></li>
           @guest
           <a href="{{ route('login') }}" class="btn btn-outline-white d-flex align-items-center gap-2">
             <i class="fa-solid fa-right-to-bracket"></i> Login
@@ -80,7 +80,7 @@
               <i class="bi bi-chevron-down toggle-dropdown ms-1"></i>
             </a>
             <ul>
-              <li><a href="{{ route('profile.index') }}">Profil Saya</a></li>
+              <li><a href="{{ route('profile.edit') }}">Profil Saya</a></li>
                 @if(Auth::user() && Auth::user()->hasRole('admin'))
                     <li><a href="{{ route('adminIndex.index') }}">Halaman Admin</a></li>
                 @endif

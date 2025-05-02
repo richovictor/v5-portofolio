@@ -62,16 +62,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function certificates()
     {
-        return $this->hasMany(certificates::class);
+        return $this->hasMany(Certificates::class);
     }
 
     public function experiences()
     {
-        return $this->hasMany(experiences::class);
+        return $this->hasMany(Experiences::class);
     }
 
     public function activities()
     {
-        return $this->hasMany(activities::class);
+        return $this->hasMany(Activities::class);
     }
 }

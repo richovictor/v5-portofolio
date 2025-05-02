@@ -23,9 +23,9 @@
             <span class="sitename">PortoVolio</span>
           </a>
           <div class="footer-contact pt-3">
-            <p>Malangs</p>
+            <p>Malang</p>
             <p class="mt-3"><strong>Phone:</strong> <span>+62 852-2776-5740</span></p>
-            <p><strong>Email:</strong> <span>info@example.com</span></p>
+            <p><strong>Email:</strong> <span>victormathar4@gmail.com</span></p>
           </div>
         </div>
 

@@ -6,6 +6,11 @@
     <section id="hero" class="hero section">
 
       <div class="container">
+        @if (session('success'))
+            <div id="flash-message" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
         <div class="row gy-4">
           <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
             <h1 data-aos="fade-up">Portofolio Vohi5ma</h1>
@@ -60,7 +65,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Fitur Utama</h2>
-        <p>Yang Dapat Anda Temukan<br></p>
+        <p>Hal yang Dapat Anda Temukan<br></p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -112,10 +117,12 @@
                 <div class="col-xl-4 col-md-6 mb-4">
                     <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
 
-                        <div class="post-img position-relative overflow-hidden">
-                            <img src="{{ $user->profile->profile_image ?? asset('uploads/foto_profile/foto_profile.png') }}" class="img-fluid" alt="">
-                            <span class="post-date">{{$user->name}}</span>
-                        </div>
+                      <div class="post-img position-relative overflow-hidden" style="height: 400px;">
+                        <img src="{{ $user->profile->profile_image ?? asset('uploads/foto_profile/foto_profile.png') }}" class="img-fluid" alt="" style="height: 100%; width: 100%; object-fit: cover;">
+                        <span class="post-date">{{$user->name}}</span>
+                    </div>
+                    
+                    
 
                         <div class="post-content d-flex flex-column">
 
@@ -244,7 +251,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Clients</h2>
-        <p>We work with best clients<br></p>
+        <p>We work with the best clients<br></p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">

@@ -277,20 +277,21 @@
                 </button>
             </div> --}}
 
-            <div class="dropdown d-inline-block">
-                <button type="button" class="btn header-item bg-light-subtle border-start border-end" id="page-header-user-dropdown"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ $user->profile?->profile_image ? asset($user->profile->profile_image) : asset('uploads/foto_profile/foto_profile.png') }}"" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ Auth::user()->name }}</span>
-                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                </button>
-                <div class="dropdown-menu dropdown-menu-end">
-                    <!-- item-->
-                    <a class="dropdown-item" href="{{route('profile.index')}}"><i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> View Profile</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item " href="{{route('logout')}}" ><i class="bx bx-power-off font-size-16 align-middle me-1"></i> <span key="t-logout">Log out</span></a>
+            <div class="dropdown-menu dropdown-menu-end">
+                <!-- item-->
+                <a class="dropdown-item" href="{{route('profile.index')}}"><i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> View Profile</a>
+                <div class="dropdown-divider"></div>
+                
+                <a class="dropdown-item" href="#"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bx bx-power-off font-size-16 align-middle me-1"></i> 
+                <span key="t-logout">Log out</span>
+                </a>
 
-                </div>
+                <!-- Hidden logout form -->
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
 
         </div>

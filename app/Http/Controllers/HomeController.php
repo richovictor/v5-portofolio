@@ -9,14 +9,23 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $users = User::inRandomOrder()->take(6)->get();
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', '=', 'siswa');
+        })
+        ->with(['profile', 'selectedSkills'])
+        ->inRandomOrder()
+        ->take(6)
+        ->get();
+
 
         return view('dashboard', compact('users'));
     }
 
     public function seeall(Request $request)
     {
-        $query = User::with(['profile', 'selectedSkills']);
+        $query = User::whereHas('roles', function ($q) {
+            $q->where('name', 'siswa'); // hanya siswa
+        })->with(['profile', 'selectedSkills']);
 
         if ($request->has('search')) {
             $search = $request->search;
